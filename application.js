@@ -30,7 +30,7 @@ function clickBox(boxIndex) {
 }
 
 function checkVictoryConditions() {
-  var index, numO, numX, path, j, box
+  var index, numO, numX, path, j, box, n
   for(index in PATHS) {
     numO = 0;
     numX = 0;
@@ -49,15 +49,22 @@ function checkVictoryConditions() {
 
     if(numO == 3 || numX == 3) {
       gameStarted = false;
-
       if(numO == 3) { alert("Congratulations! You win!"); }
       if(numX == 3) { alert("You lost the game."); }
-
     }
   }
 
   if(gameStarted == true) {
-
+    n = 0
+    for(i in board) {
+      if(board[i] != undefined) {
+        n += 1;
+      }
+    }
+    if(n == 9) {
+      gameStarted = false;
+      alert("Cat's game");
+    }
   }
 }
 
@@ -89,7 +96,6 @@ function computerMove() {
   var valueArray = [5, 0, 5, 0, 25, 0, 5, 0, 5];
 
   // The computer checks each row, column, and diagonal
-
   for(index in PATHS) {
     numO = 0;
     numX = 0;
@@ -138,8 +144,6 @@ function computerMove() {
       valueArray[box] += valueChange;
     }
   }
-
-  console.log(valueArray)
 
   // Go through the value array and find the box position with the highest value
   boxIndex = 0
