@@ -136,7 +136,7 @@ function computerMove() {
       }
 
       // If a path contains exactly one O, its value goes up.
-      if(numO == 0 && numX == 1) {
+      if(numO == 1 && numX == 0) {
         valueChange = 10;
       }
 
