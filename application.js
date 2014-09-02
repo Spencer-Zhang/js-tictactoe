@@ -16,9 +16,15 @@ var PATHS = [
 
 
 function resetGame() {
+  var i
   board = Array(9);
   gameStarted = true;
   currentPlayer = "O";
+
+  for(i=0; i<9; i++) {
+    $('#b' + i).css('background-color', 'white')
+  }
+
 }
 
 function clickBox(boxIndex) {
@@ -49,6 +55,9 @@ function checkVictoryConditions() {
 
     if(numO == 3 || numX == 3) {
       gameStarted = false;
+      for(j in path) {
+        $('#b' + path[j]).css('background-color', 'red') 
+      }
       if(numO == 3) { alert("Congratulations! You win!"); }
       if(numX == 3) { alert("You lost the game."); }
     }
@@ -70,10 +79,13 @@ function checkVictoryConditions() {
 
 function nextPlayer() {
   checkVictoryConditions()
-  if(currentPlayer == "X") {
-    currentPlayer = "O";
-  } else {
-    currentPlayer = "X";
+  if(gameStarted = true) {
+    if(currentPlayer == "X") {
+      currentPlayer = "O";
+    } else {
+      currentPlayer = "X";
+      computerMove();
+    }
   }
 }
 
@@ -128,11 +140,6 @@ function computerMove() {
         valueChange = 10;
       }
 
-      // If a path contains exactly one X, its value goes down.
-      if(numO == 1 && numX == 0) {
-        valueChange = -10;
-      }
-
       // If a path contains one X and one O, its value goes down.
       if(numO == 1 && numX == 1) {
         valueChange = -50;
@@ -166,7 +173,6 @@ $(function() {
     if(gameStarted == true && currentPlayer == "O") {
       boxIndex = parseInt($(this).attr('id')[1]);
       clickBox(boxIndex);
-      computerMove();
     }
   })
 
