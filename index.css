@@ -3,7 +3,9 @@ body {
 }
 
 .canvas {
-  display: inline-block;
+  display: block;
+  height: 338px;
+  width: 346px;
   border: 1px solid black;
   background: white;
   margin: 0 auto;
