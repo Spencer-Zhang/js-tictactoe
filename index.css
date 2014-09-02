@@ -1,0 +1,23 @@
+body {
+
+}
+
+.canvas {
+  display: inline-block;
+  border: 1px solid black;
+  background: white;
+  margin: 0 auto;
+  padding: 10px;
+  
+}
+
+.box {
+  display: inline-block;
+  border: 1px solid black;
+  width: 100px;
+  height: 100px;
+  font-size: 90px;
+  text-align: center;
+  vertical-align: bottom;
+  margin: 5px;
+}
