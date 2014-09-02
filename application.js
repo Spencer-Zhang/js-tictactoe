@@ -24,6 +24,7 @@ function resetGame() {
 function clickBox(boxIndex) {
   if(board[boxIndex] == undefined) {
     board[boxIndex] = currentPlayer
+    printBoard();
     nextPlayer();
   }
 }
@@ -49,7 +50,13 @@ function checkVictoryConditions() {
     if(numO == 3 || numX == 3) {
       gameStarted = false;
 
+      if(numO == 3) { alert("Congratulations! You win!"); }
+      if(numX == 3) { alert("You lost the game."); }
+
     }
+  }
+
+  if(gameStarted == true) {
 
   }
 }
@@ -79,7 +86,7 @@ function computerMove() {
   // The Computer calculates the value of each position on the board.
   // The center of the board is worth the most, and corners are worth more than sides.
   var numO, numX, valueChange, boxIndex, index
-  var valueArray = [5, 0, 5, 0, 10, 0, 5, 0, 5];
+  var valueArray = [5, 0, 5, 0, 25, 0, 5, 0, 5];
 
   // The computer checks each row, column, and diagonal
 
@@ -110,9 +117,19 @@ function computerMove() {
         valueChange = 200;
       }
 
+      // If a path contains exactly one O, its value goes up.
+      if(numO == 0 && numX == 1) {
+        valueChange = 10;
+      }
+
+      // If a path contains exactly one X, its value goes down.
+      if(numO == 1 && numX == 0) {
+        valueChange = -10;
+      }
+
       // If a path contains one X and one O, its value goes down.
       if(numO == 1 && numX == 1) {
-        valueChange = -10;
+        valueChange = -50;
       }
     }
 
@@ -134,7 +151,6 @@ function computerMove() {
   }
 
   clickBox(boxIndex);
-  printBoard();
 }
 
 
@@ -146,7 +162,6 @@ $(function() {
     if(gameStarted == true && currentPlayer == "O") {
       boxIndex = parseInt($(this).attr('id')[1]);
       clickBox(boxIndex);
-      printBoard();
       computerMove();
     }
   })
