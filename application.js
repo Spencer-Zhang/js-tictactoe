@@ -15,16 +15,21 @@ var PATHS = [
 
 
 
+function showMessage(message) {
+  $('.message').text(message);
+}
+
+
 function resetGame() {
-  var i
+  var boxId
   board = Array(9);
   gameStarted = true;
   currentPlayer = "O";
+  showMessage("");
 
-  for(i=0; i<9; i++) {
-    $('#b' + i).css('background-color', 'white')
+  for(boxId=0; boxId<9; boxId++) {
+    $('#b' + boxId).css('background-color', 'white')
   }
-
 }
 
 function clickBox(boxIndex) {
@@ -58,8 +63,8 @@ function checkVictoryConditions() {
       for(j in path) {
         $('#b' + path[j]).css('background-color', 'red') 
       }
-      if(numO == 3) { alert("Congratulations! You win!"); }
-      if(numX == 3) { alert("You lost the game."); }
+      if(numO == 3) { showMessage("Congratulations! You win!"); }
+      if(numX == 3) { showMessage("Computer wins"); }
     }
   }
 
@@ -72,14 +77,14 @@ function checkVictoryConditions() {
     }
     if(n == 9) {
       gameStarted = false;
-      alert("Cat's game");
+      showMessage("Cat's game");
     }
   }
 }
 
 function nextPlayer() {
   checkVictoryConditions()
-  if(gameStarted = true) {
+  if(gameStarted == true) {
     if(currentPlayer == "X") {
       currentPlayer = "O";
     } else {
@@ -104,47 +109,35 @@ function printBoard() {
 function computerMove() {
   // The Computer calculates the value of each position on the board.
   // The center of the board is worth the most, and corners are worth more than sides.
-  var numO, numX, valueChange, boxIndex, index
+  var numO, numX
+  var valueChange, boxIndex, pathIndex
   var valueArray = [5, 0, 5, 0, 25, 0, 5, 0, 5];
 
   // The computer checks each row, column, and diagonal
-  for(index in PATHS) {
+  for(pathIndex in PATHS) {
     numO = 0;
     numX = 0;
-    path = PATHS[index];
+    path = PATHS[pathIndex];
     valueChange = 0;
 
     for(j in path) {
       box = path[j];
-      if(board[box] == "O") {
-        numO += 1;
-      }
-      if(board[box] == "X") {
-        numX += 1;
-      }
+      if(board[box] == "O") { numO += 1; }
+      if(board[box] == "X") { numX += 1; }
     }
 
-    if(numO + numX < 3) {
-      // If it can win on the next turn, the most valuable move is the winning move.
-      if(numX == 2) {
-        valueChange = 500;
-      }
+    // If it can win on the next turn, the most valuable move is the winning move.
+    if(numX == 2 && numO == 0) { valueChange = 500; }
 
-      // Otherwise, if the player can win, the most valuable move is one that blocks the player.
-      if(numO == 2) {
-        valueChange = 200;
-      }
+    // Otherwise, if the player can win, the most valuable move is one that blocks the player.
+    if(numO == 2 && numX == 0) { valueChange = 200; }
 
-      // If a path contains exactly one O, its value goes up.
-      if(numO == 1 && numX == 0) {
-        valueChange = 10;
-      }
+    // If a path contains exactly one O, its value goes up.
+    // The AI prioritizes blocking the player over winning the game itself.
+    if(numO == 1 && numX == 0) { valueChange = 10; }
 
-      // If a path contains one X and one O, its value goes down.
-      if(numO == 1 && numX == 1) {
-        valueChange = -50;
-      }
-    }
+    // If a path contains one X and one O, its value goes down.
+    if(numO == 1 && numX == 1) { valueChange = -50; }
 
     for(j in path) {
       box = path[j]
@@ -153,15 +146,15 @@ function computerMove() {
   }
 
   // Go through the value array and find the box position with the highest value
-  boxIndex = 0
-  for(index = 0; index < 9; index++) {
-    if(board[index] != undefined) { valueArray[index] = -500 }
-    if(valueArray[index] > valueArray[boxIndex]) {
-      boxIndex = index;
+  bestMove = 0
+  for(boxIndex = 0; boxIndex < 9; boxIndex++) {
+    if(board[boxIndex] != undefined) { valueArray[boxIndex] = -500 }
+    if(valueArray[boxIndex] > valueArray[bestMove]) {
+      bestMove = boxIndex;
     }
   }
 
-  clickBox(boxIndex);
+  clickBox(bestMove);
 }
 
 

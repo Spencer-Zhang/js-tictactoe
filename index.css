@@ -24,6 +24,13 @@ body {
   margin: 5px;
 }
 
+.message {
+  margin: 0 auto;
+  font-size: 49px;
+  color: red;
+  text-align: center;
+}
+
 button {
   display: block;
   margin: 20px auto;
