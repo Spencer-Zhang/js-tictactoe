@@ -1,8 +1,4 @@
-var gameStarted
-var currentPlayer
-var board
-
-var PATHS = [
+var LANES = [
   [0,1,2],
   [3,4,5],
   [6,7,8],
@@ -11,7 +7,79 @@ var PATHS = [
   [2,5,8],
   [0,4,8],
   [2,4,6]
-];
+]
+
+var Game = {
+  isPlaying: false,
+  currentPlayer: "O",
+  board: [],
+  lanes: {},
+
+  reset: function() {
+    var boxId
+    this.board = Array(9);
+    this.isPlaying = true;
+    this.currentPlayer = "O";
+
+    this.lanes = {}
+    for(index in LANES) {
+      this.lanes[index] = {boxes: LANES[index], count: {"O": 0, "X": 0}}
+    }
+
+    showMessage("");
+
+    for(boxId=0; boxId<9; boxId++) {
+      $('#b' + boxId).css('background-color', 'white')
+    }
+
+    updateBoard();
+  },
+
+  clickBox: function(boxIndex, player) {
+    if(this.board[boxIndex] == undefined) {
+      this.board[boxIndex] = this.currentPlayer
+
+      for(laneIndex in this.lanes) {
+        lane = this.lanes[laneIndex];
+        if($.inArray(boxIndex, lane.boxes) != -1) {
+          lane.count[player] += 1;
+        }
+      }
+
+      updateBoard();
+      nextPlayer();
+    }
+  },
+
+  checkVictoryConditions: function() {
+    var laneindex, lane, boxIndex
+
+    for(laneIndex in this.lanes) {
+      lane = this.lanes[laneIndex];
+      if(lane.count["O"] === 3 || lane.count["X"] === 3) {
+        this.isPlaying = false;
+        for(boxIndex in lane.boxes) {
+          $('#b' + lane.boxes[boxIndex]).css('background-color', 'red') 
+        }
+        if(lane.count["O"] === 3) { showMessage("Player O wins!"); }
+        if(lane.count["X"] === 3) { showMessage("Player X wins!"); }
+      }
+    }
+
+    if(this.isPlaying == true) {
+      var n = 0
+      for(boxIndex in this.board) {
+        if(this.board[boxIndex] != undefined) {
+          n += 1;
+        }
+      }
+      if(n == 9) {
+        this.isPlaying = false;
+        showMessage("Cat's game");
+      }
+    }
+  }
+}
 
 
 
@@ -20,85 +88,24 @@ function showMessage(message) {
 }
 
 
-function resetGame() {
-  var boxId
-  board = Array(9);
-  gameStarted = true;
-  currentPlayer = "O";
-  showMessage("");
-
-  for(boxId=0; boxId<9; boxId++) {
-    $('#b' + boxId).css('background-color', 'white')
-  }
-}
-
-function clickBox(boxIndex) {
-  if(board[boxIndex] == undefined) {
-    board[boxIndex] = currentPlayer
-    printBoard();
-    nextPlayer();
-  }
-}
-
-function checkVictoryConditions() {
-  var index, numO, numX, path, j, box, n
-  for(index in PATHS) {
-    numO = 0;
-    numX = 0;
-    path = PATHS[index];
-    valueChange = 0;
-
-    for(j in path) {
-      box = path[j];
-      if(board[box] == "O") {
-        numO += 1;
-      }
-      if(board[box] == "X") {
-        numX += 1;
-      }
-    }
-
-    if(numO == 3 || numX == 3) {
-      gameStarted = false;
-      for(j in path) {
-        $('#b' + path[j]).css('background-color', 'red') 
-      }
-      if(numO == 3) { showMessage("Congratulations! You win!"); }
-      if(numX == 3) { showMessage("Computer wins"); }
-    }
-  }
-
-  if(gameStarted == true) {
-    n = 0
-    for(i in board) {
-      if(board[i] != undefined) {
-        n += 1;
-      }
-    }
-    if(n == 9) {
-      gameStarted = false;
-      showMessage("Cat's game");
-    }
-  }
-}
 
 function nextPlayer() {
-  checkVictoryConditions()
-  if(gameStarted == true) {
-    if(currentPlayer == "X") {
-      currentPlayer = "O";
+  Game.checkVictoryConditions()
+  if(Game.isPlaying == true) {
+    if(Game.currentPlayer == "X") {
+      Game.currentPlayer = "O";
     } else {
-      currentPlayer = "X";
-      computerMove();
+      Game.currentPlayer = "X";
+      Game.clickBox(findBestMove("X"), Game.currentPlayer);
     }
   }
 }
 
-function printBoard() {
+function updateBoard() {
   var i
   for(i=0; i<9; i++){
-    if(board[i] != undefined) {
-      $("#b" + i).text(board[i])
+    if(Game.board[i] != undefined) {
+      $("#b" + i).text(Game.board[i])
     } else {
       $("#b" + i).text('')
     }
@@ -106,41 +113,42 @@ function printBoard() {
 }
 
 
-function computerMove() {
+function findBestMove(player) {
   // The Computer calculates the value of each position on the board.
   // The center of the board is worth the most, and corners are worth more than sides.
-  var numO, numX
-  var valueChange, boxIndex, pathIndex
+  var numMine, numOther
+  var valueChange, boxIndex, laneIndex
   var valueArray = [5, 0, 5, 0, 25, 0, 5, 0, 5];
 
   // The computer checks each row, column, and diagonal
-  for(pathIndex in PATHS) {
-    numO = 0;
-    numX = 0;
-    path = PATHS[pathIndex];
-    valueChange = 0;
-
-    for(j in path) {
-      box = path[j];
-      if(board[box] == "O") { numO += 1; }
-      if(board[box] == "X") { numX += 1; }
+  for(laneIndex in Game.lanes) {
+    lane = Game.lanes[laneIndex];
+    
+    if(player === "O") {
+      numMine = lane.count["O"];
+      numOther = lane.count["X"];
+    } else {
+      numMine = lane.count["X"];
+      numOther = lane.count["O"];
     }
 
+    valueChange = 0;
+
     // If it can win on the next turn, the most valuable move is the winning move.
-    if(numX == 2 && numO == 0) { valueChange = 500; }
+    if(numMine == 2 && numOther == 0) { valueChange = 500; }
 
     // Otherwise, if the player can win, the most valuable move is one that blocks the player.
-    if(numO == 2 && numX == 0) { valueChange = 200; }
+    if(numOther == 2 && numMine == 0) { valueChange = 200; }
 
-    // If a path contains exactly one O, its value goes up.
+    // If a lane contains exactly one O, its value goes up.
     // The AI prioritizes blocking the player over winning the game itself.
-    if(numO == 1 && numX == 0) { valueChange = 10; }
+    if(numOther == 1 && numMine == 0) { valueChange = 10; }
 
-    // If a path contains one X and one O, its value goes down.
-    if(numO == 1 && numX == 1) { valueChange = -50; }
+    // If a lane contains one X and one O, its value goes down.
+    if(numOther == 1 && numMine == 1) { valueChange = -50; }
 
-    for(j in path) {
-      box = path[j]
+    for(boxIndex in lane.boxes) {
+      box = lane.boxes[boxIndex];
       valueArray[box] += valueChange;
     }
   }
@@ -148,29 +156,28 @@ function computerMove() {
   // Go through the value array and find the box position with the highest value
   bestMove = 0
   for(boxIndex = 0; boxIndex < 9; boxIndex++) {
-    if(board[boxIndex] != undefined) { valueArray[boxIndex] = -500 }
+    if(Game.board[boxIndex] != undefined) { valueArray[boxIndex] = -500 }
     if(valueArray[boxIndex] > valueArray[bestMove]) {
       bestMove = boxIndex;
     }
   }
 
-  clickBox(bestMove);
+  return bestMove;
 }
 
 
 
 $(function() {
-  resetGame();
+  Game.reset();
 
   $('.box').click(function() {
-    if(gameStarted == true && currentPlayer == "O") {
+    if(Game.isPlaying == true && Game.currentPlayer == "O") {
       boxIndex = parseInt($(this).attr('id')[1]);
-      clickBox(boxIndex);
+      Game.clickBox(boxIndex, Game.currentPlayer);
     }
   })
 
   $('button').click(function() {
-    resetGame();
-    printBoard();
+    Game.reset();
   })
 })
