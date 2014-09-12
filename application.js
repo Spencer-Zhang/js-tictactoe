@@ -1,3 +1,5 @@
+var humanPlayer = "X"
+
 var LANES = [
   [0,1,2],
   [3,4,5],
@@ -33,6 +35,8 @@ var Game = {
     }
 
     updateBoard();
+		
+		if(Game.currentPlayer != humanPlayer) { Game.clickBox(findBestMove("X"), Game.currentPlayer); }
   },
 
   clickBox: function(boxIndex, player) {
@@ -96,8 +100,9 @@ function nextPlayer() {
       Game.currentPlayer = "O";
     } else {
       Game.currentPlayer = "X";
-      Game.clickBox(findBestMove("X"), Game.currentPlayer);
     }
+		
+		if(Game.currentPlayer != humanPlayer) { Game.clickBox(findBestMove(Game.currentPlayer), Game.currentPlayer); }
   }
 }
 
@@ -135,7 +140,7 @@ function findBestMove(player) {
     valueChange = 0;
 
     // If it can win on the next turn, the most valuable move is the winning move.
-    if(numMine == 2 && numOther == 0) { valueChange = 500; }
+    if(numMine == 2 && numOther == 0) { valueChange = 1000; }
 
     // Otherwise, if the player can win, the most valuable move is one that blocks the player.
     if(numOther == 2 && numMine == 0) { valueChange = 200; }
@@ -152,6 +157,8 @@ function findBestMove(player) {
       valueArray[box] += valueChange;
     }
   }
+	
+	console.log(valueArray);
 
   // Go through the value array and find the box position with the highest value
   bestMove = 0
@@ -171,7 +178,7 @@ $(function() {
   Game.reset();
 
   $('.box').click(function() {
-    if(Game.isPlaying == true && Game.currentPlayer == "O") {
+    if(Game.isPlaying == true && Game.currentPlayer == humanPlayer) {
       boxIndex = parseInt($(this).attr('id')[1]);
       Game.clickBox(boxIndex, Game.currentPlayer);
     }
