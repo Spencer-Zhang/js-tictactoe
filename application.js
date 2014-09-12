@@ -1,4 +1,4 @@
-var humanPlayer = "X"
+var humanPlayer = "O"
 
 var LANES = [
   [0,1,2],
@@ -187,4 +187,9 @@ $(function() {
   $('button').click(function() {
     Game.reset();
   })
+	
+	$('.player-select input').change(function() {
+		humanPlayer = $(this).attr('value');
+		Game.reset();
+	})
 })

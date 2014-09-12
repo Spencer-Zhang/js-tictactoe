@@ -31,9 +31,24 @@ body {
   text-align: center;
 }
 
-button {
+.control {
   display: block;
   margin: 20px auto;
-  font-size: 20px;
+	text-align: center;
+	width: auto;
+}
+
+.player-select {
+	display:inline-block;
+	border: 1px solid black;
+	padding: 10px;
+	
+}
+
+button {
+	position: relative;
+	top: -20px;
+	display: inline-block;
+	font-size: 20px;
   padding: 20px;
 }

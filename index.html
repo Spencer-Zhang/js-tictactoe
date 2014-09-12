@@ -9,7 +9,14 @@
 
 <body>
 
-  <button>Reset Board</button>
+	<div class="control">
+		<button>Reset Board</button>
+		<div class="player-select">
+			<label for="humanPlayer">Play as:</label><br>
+			<input type="radio" name="humanPlayer" value="O" checked>O</input><br>
+			<input type="radio" name="humanPlayer" value="X">X</input><br>
+		</div>
+	</div>
 
   <div class="canvas">
     <div class="box" id="b0"></div>
