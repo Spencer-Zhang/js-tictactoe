@@ -35,8 +35,8 @@ var Game = {
     }
 
     updateBoard();
-		
-		if(Game.currentPlayer != humanPlayer) { Game.clickBox(findBestMove("X"), Game.currentPlayer); }
+
+    if(Game.currentPlayer != humanPlayer) { Game.clickBox(findBestMove("X"), Game.currentPlayer); }
   },
 
   clickBox: function(boxIndex, player) {
@@ -101,8 +101,8 @@ function nextPlayer() {
     } else {
       Game.currentPlayer = "X";
     }
-		
-		if(Game.currentPlayer != humanPlayer) { Game.clickBox(findBestMove(Game.currentPlayer), Game.currentPlayer); }
+
+    if(Game.currentPlayer != humanPlayer) { Game.clickBox(findBestMove(Game.currentPlayer), Game.currentPlayer); }
   }
 }
 
@@ -157,8 +157,6 @@ function findBestMove(player) {
       valueArray[box] += valueChange;
     }
   }
-	
-	console.log(valueArray);
 
   // Go through the value array and find the box position with the highest value
   bestMove = 0
@@ -187,9 +185,9 @@ $(function() {
   $('button').click(function() {
     Game.reset();
   })
-	
-	$('.player-select input').change(function() {
-		humanPlayer = $(this).attr('value');
-		Game.reset();
-	})
+
+  $('.player-select input').change(function() {
+    humanPlayer = $(this).attr('value');
+    Game.reset();
+  })
 })
