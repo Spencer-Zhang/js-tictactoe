@@ -13,39 +13,45 @@ var LANES = [
 
 
 
-function showMessage(message) {
-  $('.message').text(message);
-}
-
 function updateDisplay() {
-  var i;
+  var showMessage = function(message) {
+    $('.message').text(message);
+  }
+
+  var i, winner;
   for(i=0; i<9; i++){
+    $('#b' + i).css('background-color', 'white');
     if(Game.board[i] !== undefined) {
       $("#b" + i).text(Game.board[i]);
     } else {
       $("#b" + i).text('');
     }
   }
+
+  winner = Game.checkWinner();
+  if(winner) {
+    console.log(winner.lane);
+    for(boxIndex in LANES[winner.lane]) {
+      $('#b' + LANES[winner.lane][boxIndex]).css('background-color', 'red');
+    }
+    showMessage("Player " + winner.player + " wins!");
+  }
+  else if(Game.isTied()) {
+    showMessage("Cat's game");
+  }
+  else {
+    showMessage("");
+  }
 }
 
 
 
 var Game = {
-  isPlaying: false,
-  currentPlayer: "O",
-  board: [],
-
   reset: function() {
     var boxId, index;
     this.board = Array(9);
     this.isPlaying = true;
     this.currentPlayer = "O";
-
-    showMessage("");
-
-    for(boxId=0; boxId<9; boxId++) {
-      $('#b' + boxId).css('background-color', 'white');
-    }
 
     if(this.currentPlayer != humanPlayer) { this.clickBox(findBestMove("X"), this.currentPlayer); }
   },
@@ -69,23 +75,8 @@ var Game = {
     }
   },
 
-  checkVictoryConditions: function() {
-    var winner = this.checkWinner();
-
-    if(winner) {
-      this.isPlaying = false;
-      for(boxIndex in LANES[winner.lane]) {
-        $('#b' + LANES[winner.lane][boxIndex]).css('background-color', 'red');
-      }
-      showMessage("Player " + winner.player + " wins!");
-    }
-
-    if(this.isPlaying === true) {
-      if(this.gameIsTied()) {
-        this.isPlaying = false;
-        showMessage("Cat's game");
-      }
-    }
+  isPlaying: function() {
+    return(this.checkWinner() === false && this.isTied() === false)
   },
 
   checkWinner: function() {
@@ -103,13 +94,12 @@ var Game = {
     return false;
   },
 
-  gameIsTied: function() {
+  isTied: function() {
     var count = this.countPieces();
     return(count.O + count.X === 9);
   },
 
   advanceTurn: function() {
-    this.checkVictoryConditions();
     if(this.isPlaying === true) {
       if(this.currentPlayer == "X") {
         this.currentPlayer = "O";
@@ -151,7 +141,6 @@ function findBestMove(player) {
     if(numOther === 2 && numMine === 0) { valueChange = 200; }
 
     // If a lane contains exactly one O, its value goes up.
-    // The AI prioritizes blocking the player over winning the game itself.
     if(numOther === 1 && numMine === 0) { valueChange = 10; }
 
     // If a lane contains one X and one O, its value goes down.

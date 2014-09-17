@@ -56,26 +56,27 @@ describe("Game", function() {
     });
   });
 
-  describe("checkVictoryConditions", function() {
-    it("does not end the game if conditions are not met", function() {
-      Game.checkVictoryConditions();
-      expect(Game.isPlaying).toEqual(true);
-    });
+  describe("#checkWinner", function() {
+    it("returns falsy if no player has won", function() {
+      expect(Game.checkWinner()).toBeFalsy();
+    })
 
     it("ends the game if a player wins", function() {
       Game.board[0] = "X";
       Game.board[1] = "X";
       Game.board[2] = "X";
-      Game.checkVictoryConditions();
-      expect(Game.isPlaying).toEqual(false);
+      winner = Game.checkWinner()
+      expect(winner.player).toEqual("X");
+      expect(winner.lane).toEqual(0);
     });
+  });
 
-    it("ends the game if all spaces on the board are filled", function() {
+  describe("#isTied", function() {
+    it("returns true if all spaces on the board are filled", function() {
       Game.board = ["X", "O", "X", 
                     "X", "O", "O", 
                     "O", "X", "X"];
-      Game.checkVictoryConditions();
-      expect(Game.isPlaying).toEqual(false);
+      expect(Game.isTied()).toEqual(true);
     })
   })
 });
