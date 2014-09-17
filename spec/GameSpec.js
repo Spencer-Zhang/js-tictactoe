@@ -61,7 +61,7 @@ describe("Game", function() {
       expect(Game.checkWinner()).toBeFalsy();
     })
 
-    it("ends the game if a player wins", function() {
+    it("return the winning player and lane if a row is filled", function() {
       Game.board[0] = "X";
       Game.board[1] = "X";
       Game.board[2] = "X";

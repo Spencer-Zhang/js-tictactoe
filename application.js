@@ -101,7 +101,7 @@ var Game = {
 
   advanceTurn: function() {
     if(this.isPlaying === true) {
-      if(this.currentPlayer == "X") {
+      if(this.currentPlayer === "X") {
         this.currentPlayer = "O";
       } else {
         this.currentPlayer = "X";
