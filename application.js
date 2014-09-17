@@ -1,5 +1,3 @@
-var humanPlayer = "O";
-
 var LANES = [
   [0,1,2],
   [3,4,5],
@@ -159,8 +157,14 @@ function findBestMove(player) {
 
 
 $(function() {
-  Game.reset();
-  if(Game.currentPlayer != humanPlayer) { Game.clickBox(findBestMove(Game.currentPlayer), Game.currentPlayer); }
+  var startNewGame = function() {
+    Game.reset();
+    if(Game.currentPlayer != humanPlayer) { Game.clickBox(findBestMove(Game.currentPlayer), Game.currentPlayer); }
+    updateDisplay();
+  }
+  var humanPlayer = "O";
+
+  startNewGame();
 
   $('.box').click(function() {
     var boxIndex;
@@ -174,15 +178,11 @@ $(function() {
   });
 
   $('button').click(function() {
-    Game.reset();
-    if(Game.currentPlayer != humanPlayer) { Game.clickBox(findBestMove(Game.currentPlayer), Game.currentPlayer); }
-    updateDisplay();
+    startNewGame();
   });
 
   $('.player-select input').change(function() {
     humanPlayer = $(this).attr('value');
-    Game.reset();
-    if(Game.currentPlayer != humanPlayer) { Game.clickBox(findBestMove(Game.currentPlayer), Game.currentPlayer); }
-    updateDisplay();
+    startNewGame();    
   });
 });
