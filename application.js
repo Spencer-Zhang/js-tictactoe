@@ -26,9 +26,6 @@ function updateDisplay() {
       $("#b" + i).text('');
     }
   }
-
-
-
 }
 
 
@@ -73,9 +70,7 @@ var Game = {
   },
 
   checkVictoryConditions: function() {
-    var laneIndex, boxIndex, count, boxes, winner;
-
-    winner = this.checkWinner();
+    var winner = this.checkWinner();
 
     if(winner) {
       this.isPlaying = false;
@@ -94,6 +89,8 @@ var Game = {
   },
 
   checkWinner: function() {
+    var laneIndex, boxes, count;
+
     for(laneIndex=0; laneIndex<8; laneIndex++) {
       boxes = LANES[laneIndex];
       count = this.countPieces(boxes);
@@ -187,8 +184,10 @@ $(function() {
     var boxIndex;
     if(Game.isPlaying === true && Game.currentPlayer == humanPlayer) {
       boxIndex = parseInt($(this).attr('id')[1]);
+
       Game.clickBox(boxIndex, Game.currentPlayer);
       if(Game.currentPlayer != humanPlayer) { Game.clickBox(findBestMove(Game.currentPlayer), Game.currentPlayer); }
+
       updateDisplay();
     }
   });
