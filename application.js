@@ -17,7 +17,7 @@ function showMessage(message) {
   $('.message').text(message);
 }
 
-function updateBoard() {
+function updateDisplay() {
   var i;
   for(i=0; i<9; i++){
     if(Game.board[i] !== undefined) {
@@ -26,6 +26,9 @@ function updateBoard() {
       $("#b" + i).text('');
     }
   }
+
+
+
 }
 
 
@@ -47,8 +50,6 @@ var Game = {
       $('#b' + boxId).css('background-color', 'white');
     }
 
-    updateBoard();
-
     if(this.currentPlayer != humanPlayer) { this.clickBox(findBestMove("X"), this.currentPlayer); }
   },
 
@@ -67,38 +68,50 @@ var Game = {
   clickBox: function(boxIndex, player) {
     if(this.board[boxIndex] !== "X" && this.board[boxIndex] !== "O") {
       this.board[boxIndex] = this.currentPlayer;
-      updateBoard();
-      this.nextPlayer();
+      this.advanceTurn();
     }
   },
 
   checkVictoryConditions: function() {
-    var laneIndex, boxIndex, count, boxes;
+    var laneIndex, boxIndex, count, boxes, winner;
 
-    for(laneIndex=0; laneIndex<8; laneIndex++) {
-      boxes = LANES[laneIndex];
-      count = this.countPieces(boxes);
+    winner = this.checkWinner();
 
-      if(count.O === 3 || count.X === 3) {
-        this.isPlaying = false;
-        for(boxIndex in boxes) {
-          $('#b' + boxes[boxIndex]).css('background-color', 'red');
-        }
-        if(count.O === 3) { showMessage("Player O wins!"); }
-        if(count.X === 3) { showMessage("Player X wins!"); }
+    if(winner) {
+      this.isPlaying = false;
+      for(boxIndex in LANES[winner.lane]) {
+        $('#b' + LANES[winner.lane][boxIndex]).css('background-color', 'red');
       }
+      showMessage("Player " + winner.player + " wins!");
     }
 
     if(this.isPlaying === true) {
-      count = this.countPieces();
-      if(count.O + count.X === 9) {
+      if(this.gameIsTied()) {
         this.isPlaying = false;
         showMessage("Cat's game");
       }
     }
   },
 
-  nextPlayer: function() {
+  checkWinner: function() {
+    for(laneIndex=0; laneIndex<8; laneIndex++) {
+      boxes = LANES[laneIndex];
+      count = this.countPieces(boxes);
+
+      if(count.O === 3 || count.X === 3) {
+        if(count.O === 3) { return {player:"O", lane:laneIndex}; }
+        if(count.X === 3) { return {player:"X", lane:laneIndex}; }
+      }
+    }
+    return false;
+  },
+
+  gameIsTied: function() {
+    var count = this.countPieces();
+    return(count.O + count.X === 9);
+  },
+
+  advanceTurn: function() {
     this.checkVictoryConditions();
     if(this.isPlaying === true) {
       if(this.currentPlayer == "X") {
@@ -106,8 +119,6 @@ var Game = {
       } else {
         this.currentPlayer = "X";
       }
-
-      if(this.currentPlayer != humanPlayer) { this.clickBox(findBestMove(this.currentPlayer), this.currentPlayer); }
     }
   }
 };
@@ -177,15 +188,19 @@ $(function() {
     if(Game.isPlaying === true && Game.currentPlayer == humanPlayer) {
       boxIndex = parseInt($(this).attr('id')[1]);
       Game.clickBox(boxIndex, Game.currentPlayer);
+      if(Game.currentPlayer != humanPlayer) { Game.clickBox(findBestMove(Game.currentPlayer), Game.currentPlayer); }
+      updateDisplay();
     }
   });
 
   $('button').click(function() {
     Game.reset();
+    updateDisplay();
   });
 
   $('.player-select input').change(function() {
     humanPlayer = $(this).attr('value');
     Game.reset();
+    updateDisplay();
   });
 });

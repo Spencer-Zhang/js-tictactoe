@@ -82,7 +82,7 @@ describe("Game", function() {
 
 
 
-describe("findBestMove", function() {
+describe("#findBestMove", function() {
   beforeEach(function() {
     Game.reset();
   })
