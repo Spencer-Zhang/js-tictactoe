@@ -50,8 +50,6 @@ var Game = {
     var boxId, index;
     this.board = Array(9);
     this.currentPlayer = "O";
-
-    if(this.currentPlayer != humanPlayer) { this.clickBox(findBestMove("X"), this.currentPlayer); }
   },
 
   countPieces: function(boxes) {
@@ -83,7 +81,7 @@ var Game = {
     for(laneIndex=0; laneIndex<8; laneIndex++) {
       boxes = LANES[laneIndex];
       count = this.countPieces(boxes);
-
+      
       if(count.O === 3 || count.X === 3) {
         if(count.O === 3) { return {player:"O", lane:laneIndex}; }
         if(count.X === 3) { return {player:"X", lane:laneIndex}; }
@@ -98,7 +96,7 @@ var Game = {
   },
 
   advanceTurn: function() {
-    if(this.isPlaying === true) {
+    if(this.isPlaying() === true) {
       if(this.currentPlayer === "X") {
         this.currentPlayer = "O";
       } else {
@@ -162,27 +160,29 @@ function findBestMove(player) {
 
 $(function() {
   Game.reset();
+  if(Game.currentPlayer != humanPlayer) { Game.clickBox(findBestMove(Game.currentPlayer), Game.currentPlayer); }
 
   $('.box').click(function() {
     var boxIndex;
-    if(Game.isPlaying === true && Game.currentPlayer == humanPlayer) {
+    if(Game.isPlaying() === true && Game.currentPlayer == humanPlayer) {
       boxIndex = parseInt($(this).attr('id')[1]);
 
       Game.clickBox(boxIndex, Game.currentPlayer);
       if(Game.currentPlayer != humanPlayer) { Game.clickBox(findBestMove(Game.currentPlayer), Game.currentPlayer); }
-
       updateDisplay();
     }
   });
 
   $('button').click(function() {
     Game.reset();
+    if(Game.currentPlayer != humanPlayer) { Game.clickBox(findBestMove(Game.currentPlayer), Game.currentPlayer); }
     updateDisplay();
   });
 
   $('.player-select input').change(function() {
     humanPlayer = $(this).attr('value');
     Game.reset();
+    if(Game.currentPlayer != humanPlayer) { Game.clickBox(findBestMove(Game.currentPlayer), Game.currentPlayer); }
     updateDisplay();
   });
 });
