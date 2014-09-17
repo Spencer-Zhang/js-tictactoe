@@ -4,10 +4,6 @@ describe("Game", function() {
   })
 
   describe("#reset", function() {
-    it("should start a new game", function() {
-      expect(Game.isPlaying).toEqual(true);
-    })
-
     it("should create a blank board", function() {
       var i;
       expect(Game.board.length).toEqual(9);
@@ -78,6 +74,26 @@ describe("Game", function() {
                     "O", "X", "X"];
       expect(Game.isTied()).toEqual(true);
     })
+  })
+
+  describe("#isPlaying", function() {
+    it("returns true when the board is blank", function() {
+      expect(Game.isPlaying()).toEqual(true);
+    })
+
+    it("returns false if all spaces on the board are filled", function() {
+      Game.board = ["X", "O", "X", 
+                    "X", "O", "O", 
+                    "O", "X", "X"];
+      expect(Game.isPlaying()).toEqual(false);
+    })
+
+    it("return false if a row is filled", function() {
+      Game.board[0] = "X";
+      Game.board[1] = "X";
+      Game.board[2] = "X";
+      expect(Game.isPlaying()).toEqual(false);
+    });
   })
 });
 

@@ -49,7 +49,6 @@ var Game = {
   reset: function() {
     var boxId, index;
     this.board = Array(9);
-    this.isPlaying = true;
     this.currentPlayer = "O";
 
     if(this.currentPlayer != humanPlayer) { this.clickBox(findBestMove("X"), this.currentPlayer); }
