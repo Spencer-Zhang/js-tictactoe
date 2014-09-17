@@ -16,9 +16,10 @@ var LANES = [
 function updateDisplay() {
   var showMessage = function(message) {
     $('.message').text(message);
-  }
+  };
 
-  var i, winner;
+  var i, winner, boxIndex;
+
   for(i=0; i<9; i++){
     $('#b' + i).css('background-color', 'white');
     if(Game.board[i] !== undefined) {
@@ -47,14 +48,13 @@ function updateDisplay() {
 
 var Game = {
   reset: function() {
-    var boxId, index;
     this.board = Array(9);
     this.currentPlayer = "O";
   },
 
   countPieces: function(boxes) {
     boxes = boxes || [0,1,2,3,4,5,6,7,8];
-    var boxIndex;
+    var boxIndex, box;
     var count = { O: 0, X: 0 };
     for(boxIndex in boxes) {
       box = boxes[boxIndex];
@@ -66,13 +66,13 @@ var Game = {
 
   clickBox: function(boxIndex, player) {
     if(this.board[boxIndex] !== "X" && this.board[boxIndex] !== "O") {
-      this.board[boxIndex] = this.currentPlayer;
+      this.board[boxIndex] = player;
       this.advanceTurn();
     }
   },
 
   isPlaying: function() {
-    return(this.checkWinner() === false && this.isTied() === false)
+    return(this.checkWinner() === false && this.isTied() === false);
   },
 
   checkWinner: function() {
@@ -112,13 +112,13 @@ function findBestMove(player) {
   // The Computer calculates the value of each position on the board.
   // The center of the board is worth the most, and corners are worth more than sides.
   var numMine, numOther;
-  var valueChange, boxIndex, box, laneIndex, count;
+  var valueChange, boxIndex, boxes, box, laneIndex, count;
   var valueArray = [5, 0, 5, 0, 25, 0, 5, 0, 5];
   var bestMove;
 
   // The computer checks each row, column, and diagonal
   for(laneIndex=0; laneIndex<8; laneIndex++) {
-    boxes = LANES[laneIndex]
+    boxes = LANES[laneIndex];
     count = Game.countPieces(boxes);
     
     numMine = count[player];
