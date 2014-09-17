@@ -116,7 +116,7 @@ function findBestMove(player) {
   // The Computer calculates the value of each position on the board.
   // The center of the board is worth the most, and corners are worth more than sides.
   var numMine, numOther;
-  var valueChange, boxIndex, box, laneIndex, lane, count;
+  var valueChange, boxIndex, box, laneIndex, count;
   var valueArray = [5, 0, 5, 0, 25, 0, 5, 0, 5];
   var bestMove;
 
@@ -125,11 +125,7 @@ function findBestMove(player) {
     boxes = LANES[laneIndex]
     count = Game.countPieces(boxes);
     
-    if(player === "O") {
-      numMine = count.O;
-    } else {
-      numMine = count.X;
-    }
+    numMine = count[player];
     numOther = count.O + count.X - numMine;
 
     valueChange = 0;
