@@ -30,7 +30,6 @@ function updateDisplay() {
 
   winner = Game.checkWinner();
   if(winner) {
-    console.log(winner.lane);
     for(boxIndex in LANES[winner.lane]) {
       $('#b' + LANES[winner.lane][boxIndex]).css('background-color', 'red');
     }
