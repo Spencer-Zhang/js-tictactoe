@@ -27,7 +27,7 @@ var Game = {
     return count;
   },
 
-  clickBox: function(boxIndex, player) {
+  playMove: function(boxIndex, player) {
     if(this.board[boxIndex] !== "X" && this.board[boxIndex] !== "O") {
       this.board[boxIndex] = player;
       this.advanceTurn();

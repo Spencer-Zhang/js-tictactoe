@@ -39,15 +39,15 @@ describe("Game", function() {
     })
   })
 
-  describe("#clickBox", function() {
+  describe("#playMove", function() {
     it("should fill an empty box", function() {
-      Game.clickBox(0, "O");
+      Game.playMove(0, "O");
       expect(Game.board[0]).toEqual("O");
     });
 
     it("should not fill a box that's already filled", function() {
-      Game.clickBox(0, "O");
-      Game.clickBox(0, "X");
+      Game.playMove(0, "O");
+      Game.playMove(0, "X");
       expect(Game.board[0]).toEqual("O");
     });
   });
@@ -134,5 +134,21 @@ describe("AI", function() {
       expect(AI.findBestMove("X")).toEqual(2);
       expect(AI.findBestMove("O")).toEqual(5);
     });
+
+    describe('Specific board positions', function() {
+      it("Case 1", function() {
+        Game.board[1] = "O";
+        Game.board[3] = "O";
+        Game.board[4] = "X";
+        expect(AI.findBestMove("X")).toEqual(0);
+      })
+
+      it("Case 2", function() {
+        Game.board[5] = "O";
+        Game.board[7] = "O";
+        Game.board[4] = "X";
+        expect(AI.findBestMove("X")).toEqual(8);
+      })
+    })
   })
 });
