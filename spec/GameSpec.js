@@ -70,7 +70,7 @@ describe("Game", function() {
 
 
 
-  describe("#checkWinner", function() {
+  describe("#winnerExists", function() {
     it("returns false if no player has won", function() {
       expect(game.winnerExists()).toEqual(false);;
     })
@@ -94,11 +94,22 @@ describe("Game", function() {
       expect(winner.player).toEqual("X");
       expect(winner.lane).toEqual(0);
     });
+
+    it("returns undefined if there is no winner", function() {
+      expect(game.getWinnerData()).toEqual(undefined);
+    });
   })
 
   
 
   describe("#isTied", function() {
+    it("returns false if the board is not filled", function() {
+      game.board = ["X", "O", "X", 
+                    "X", undefined, "O", 
+                    "O", "X", "X"];
+      expect(game.isTied()).toEqual(false);
+    })
+
     it("returns true if all spaces on the board are filled", function() {
       game.board = ["X", "O", "X", 
                     "X", "O", "O", 

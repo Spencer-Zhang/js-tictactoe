@@ -2,16 +2,7 @@ $(function() {
   var game = Game.getInstance();
   var display = new Display(game);
   var cpuPlayer = new AI(game);
-  var humanPlayer;
-
-  var startNewGame = function() {
-    humanPlayer = $('.player-select input:checked').attr('value');
-    game.reset();
-    if(game.currentPlayer != humanPlayer) { game.playMove(cpuPlayer.findBestMove(game.currentPlayer), game.currentPlayer); }
-    display.update();
-  }
-
-  startNewGame();
+  var humanPlayer = "O";
 
   $('.box').click(function() {
     var boxIndex = parseInt($(this).attr('id')[1]);
@@ -24,6 +15,9 @@ $(function() {
   });
 
   $('button').click(function() {
-    startNewGame();
+    humanPlayer = $('.player-select input:checked').attr('value');
+    game.reset();
+    if(game.currentPlayer != humanPlayer) { game.playMove(cpuPlayer.findBestMove(game.currentPlayer), game.currentPlayer); }
+    display.update();
   });
 });
