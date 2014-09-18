@@ -9,13 +9,13 @@ var LANES = [
   [2,4,6]
 ];
 
-var Game = {
-  reset: function() {
-    this.board = Array(9);
-    this.currentPlayer = "O";
-  },
+var game;
 
-  countPieces: function(boxes) {
+function Game() {
+  this.board = Array(9);
+  this.currentPlayer = "O";
+
+  this.countPieces = function(boxes) {
     boxes = boxes || [0,1,2,3,4,5,6,7,8];
     var boxIndex, box;
     var count = { O: 0, X: 0 };
@@ -25,20 +25,20 @@ var Game = {
       if(this.board[box] == "X") { count.X += 1; }
     }
     return count;
-  },
+  }
 
-  playMove: function(boxIndex, player) {
+  this.playMove = function(boxIndex, player) {
     if(this.board[boxIndex] !== "X" && this.board[boxIndex] !== "O") {
       this.board[boxIndex] = player;
       this.advanceTurn();
     }
-  },
+  }
 
-  isPlaying: function() {
+  this.isPlaying = function() {
     return(this.checkWinner() === false && this.isTied() === false);
-  },
+  }
 
-  checkWinner: function() {
+  this.checkWinner = function() {
     var laneIndex, boxes, count;
 
     for(laneIndex=0; laneIndex<8; laneIndex++) {
@@ -51,14 +51,14 @@ var Game = {
       }
     }
     return false;
-  },
+  }
 
-  isTied: function() {
+  this.isTied = function() {
     var count = this.countPieces();
     return(count.O + count.X === 9);
-  },
+  }
 
-  advanceTurn: function() {
+  this.advanceTurn = function() {
     if(this.isPlaying() === true) {
       if(this.currentPlayer === "X") {
         this.currentPlayer = "O";

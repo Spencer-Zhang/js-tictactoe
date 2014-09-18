@@ -14,8 +14,8 @@ var View = {
   drawPieces: function() {
     var i;
     for(i=0; i<9; i++){
-      if(Game.board[i] !== undefined) {
-        $("#b" + i).text(Game.board[i]);
+      if(game.board[i] !== undefined) {
+        $("#b" + i).text(game.board[i]);
       }
     }
   },
@@ -25,14 +25,14 @@ var View = {
     this.clear();
     this.drawPieces();
 
-    winner = Game.checkWinner();
+    winner = game.checkWinner();
     if(winner) {
       for(boxIndex in LANES[winner.lane]) {
         $('#b' + LANES[winner.lane][boxIndex]).css('background-color', 'red');
       }
       this.showMessage("Player " + winner.player + " wins!");
     }
-    else if(Game.isTied()) {
+    else if(game.isTied()) {
       this.showMessage("Cat's game");
     }
     else {

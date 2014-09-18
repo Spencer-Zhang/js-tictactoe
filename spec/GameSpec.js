@@ -1,39 +1,39 @@
 describe("Game", function() {
   beforeEach(function() {
-    Game.reset();
+    game = new Game();
   })
 
   describe("#reset", function() {
     it("should create a blank board", function() {
       var i;
-      expect(Game.board.length).toEqual(9);
+      expect(game.board.length).toEqual(9);
       for(i=0; i<9; i++) {
-        expect(Game.board[i]).toEqual(undefined);
+        expect(game.board[i]).toEqual(undefined);
       }
     });
   });
 
   describe("#countPieces", function() {
     beforeEach(function() {
-      Game.board[0] = "O";
-      Game.board[1] = "X";
-      Game.board[2] = "O";
-      Game.board[3] = "X";
-      Game.board[4] = "O";
+      game.board[0] = "O";
+      game.board[1] = "X";
+      game.board[2] = "O";
+      game.board[3] = "X";
+      game.board[4] = "O";
     })
 
     it("should return the correct number of Os and Xs in a lane", function() {
-      count = Game.countPieces([0,1,2])
+      count = game.countPieces([0,1,2])
       expect(count.O).toEqual(2);
       expect(count.X).toEqual(1);
 
-      count = Game.countPieces([3,4,5])
+      count = game.countPieces([3,4,5])
       expect(count.O).toEqual(1);
       expect(count.X).toEqual(1);
     })
 
     it("should return the total number of Os and Xs if no parameter is given", function() {
-      count = Game.countPieces()
+      count = game.countPieces()
       expect(count.O).toEqual(3);
       expect(count.X).toEqual(2);
     })
@@ -41,27 +41,27 @@ describe("Game", function() {
 
   describe("#playMove", function() {
     it("should fill an empty box", function() {
-      Game.playMove(0, "O");
-      expect(Game.board[0]).toEqual("O");
+      game.playMove(0, "O");
+      expect(game.board[0]).toEqual("O");
     });
 
     it("should not fill a box that's already filled", function() {
-      Game.playMove(0, "O");
-      Game.playMove(0, "X");
-      expect(Game.board[0]).toEqual("O");
+      game.playMove(0, "O");
+      game.playMove(0, "X");
+      expect(game.board[0]).toEqual("O");
     });
   });
 
   describe("#checkWinner", function() {
     it("returns falsy if no player has won", function() {
-      expect(Game.checkWinner()).toBeFalsy();
+      expect(game.checkWinner()).toBeFalsy();
     })
 
     it("return the winning player and lane if a row is filled", function() {
-      Game.board[0] = "X";
-      Game.board[1] = "X";
-      Game.board[2] = "X";
-      winner = Game.checkWinner()
+      game.board[0] = "X";
+      game.board[1] = "X";
+      game.board[2] = "X";
+      winner = game.checkWinner()
       expect(winner.player).toEqual("X");
       expect(winner.lane).toEqual(0);
     });
@@ -69,30 +69,30 @@ describe("Game", function() {
 
   describe("#isTied", function() {
     it("returns true if all spaces on the board are filled", function() {
-      Game.board = ["X", "O", "X", 
+      game.board = ["X", "O", "X", 
                     "X", "O", "O", 
                     "O", "X", "X"];
-      expect(Game.isTied()).toEqual(true);
+      expect(game.isTied()).toEqual(true);
     })
   })
 
   describe("#isPlaying", function() {
     it("returns true when the board is blank", function() {
-      expect(Game.isPlaying()).toEqual(true);
+      expect(game.isPlaying()).toEqual(true);
     })
 
     it("returns false if all spaces on the board are filled", function() {
-      Game.board = ["X", "O", "X", 
+      game.board = ["X", "O", "X", 
                     "X", "O", "O", 
                     "O", "X", "X"];
-      expect(Game.isPlaying()).toEqual(false);
+      expect(game.isPlaying()).toEqual(false);
     })
 
     it("return false if a row is filled", function() {
-      Game.board[0] = "X";
-      Game.board[1] = "X";
-      Game.board[2] = "X";
-      expect(Game.isPlaying()).toEqual(false);
+      game.board[0] = "X";
+      game.board[1] = "X";
+      game.board[2] = "X";
+      expect(game.isPlaying()).toEqual(false);
     });
   })
 });
@@ -102,7 +102,7 @@ describe("Game", function() {
 describe("AI", function() {
   describe("#findBestMove", function() {
     beforeEach(function() {
-      Game.reset();
+      game = new Game();
     })
 
     it("should prioritize the center position on a blank board", function() {
@@ -110,43 +110,43 @@ describe("AI", function() {
     });
 
     it("should play in a corner if the opponent plays center first", function() {
-      Game.board[4] = "O";
+      game.board[4] = "O";
       expect([0, 2,6,8]).toContain(AI.findBestMove("X"));
     })
 
     it("should complete one of its own lanes if possible", function() {
-      Game.board[0] = "X";
-      Game.board[1] = "X";
+      game.board[0] = "X";
+      game.board[1] = "X";
       expect(AI.findBestMove("X")).toEqual(2);
     });
 
     it("should block the other player's lanes if needed", function() {
-      Game.board[0] = "O";
-      Game.board[1] = "O";
+      game.board[0] = "O";
+      game.board[1] = "O";
       expect(AI.findBestMove("X")).toEqual(2);
     });
 
     it("should prioritize completing its own lane over blocking the enemy", function() {
-      Game.board[0] = "X";
-      Game.board[1] = "X";
-      Game.board[3] = "O";
-      Game.board[4] = "O";
+      game.board[0] = "X";
+      game.board[1] = "X";
+      game.board[3] = "O";
+      game.board[4] = "O";
       expect(AI.findBestMove("X")).toEqual(2);
       expect(AI.findBestMove("O")).toEqual(5);
     });
 
     describe('Specific board positions', function() {
       it("Case 1", function() {
-        Game.board[1] = "O";
-        Game.board[3] = "O";
-        Game.board[4] = "X";
+        game.board[1] = "O";
+        game.board[3] = "O";
+        game.board[4] = "X";
         expect(AI.findBestMove("X")).toEqual(0);
       })
 
       it("Case 2", function() {
-        Game.board[5] = "O";
-        Game.board[7] = "O";
-        Game.board[4] = "X";
+        game.board[5] = "O";
+        game.board[7] = "O";
+        game.board[4] = "X";
         expect(AI.findBestMove("X")).toEqual(8);
       })
     })

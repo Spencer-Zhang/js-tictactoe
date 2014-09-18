@@ -10,7 +10,7 @@ var AI = {
     // The computer checks each row, column, and diagonal
     for(laneIndex=0; laneIndex<8; laneIndex++) {
       boxes = LANES[laneIndex];
-      count = Game.countPieces(boxes);
+      count = game.countPieces(boxes);
       
       numMine = count[player];
       numOther = count.O + count.X - numMine;
@@ -32,7 +32,7 @@ var AI = {
     // Go through the value array and find the box position with the highest value
     bestMove = 0;
     for(boxIndex = 0; boxIndex < 9; boxIndex++) {
-      if(Game.board[boxIndex] !== undefined) { weightMap[boxIndex] = -500; }
+      if(game.board[boxIndex] !== undefined) { weightMap[boxIndex] = -500; }
       if(weightMap[boxIndex] > weightMap[bestMove]) {
         bestMove = boxIndex;
       }

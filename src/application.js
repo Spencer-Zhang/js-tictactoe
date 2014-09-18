@@ -6,8 +6,8 @@
 
 $(function() {
   var startNewGame = function() {
-    Game.reset();
-    if(Game.currentPlayer != humanPlayer) { Game.playMove(AI.findBestMove(Game.currentPlayer), Game.currentPlayer); }
+    game = new Game();
+    if(game.currentPlayer != humanPlayer) { game.playMove(AI.findBestMove(game.currentPlayer), game.currentPlayer); }
     View.update();
   }
   var humanPlayer = "O";
@@ -16,11 +16,11 @@ $(function() {
 
   $('.box').click(function() {
     var boxIndex;
-    if(Game.isPlaying() === true && Game.currentPlayer == humanPlayer) {
+    if(game.isPlaying() === true && game.currentPlayer == humanPlayer) {
       boxIndex = parseInt($(this).attr('id')[1]);
 
-      Game.playMove(boxIndex, Game.currentPlayer);
-      if(Game.currentPlayer != humanPlayer) { Game.playMove(AI.findBestMove(Game.currentPlayer), Game.currentPlayer); }
+      game.playMove(boxIndex, game.currentPlayer);
+      if(game.currentPlayer != humanPlayer) { game.playMove(AI.findBestMove(game.currentPlayer), game.currentPlayer); }
       View.update();
     }
   });
