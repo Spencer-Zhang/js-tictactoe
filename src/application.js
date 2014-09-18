@@ -8,7 +8,7 @@ $(function() {
   var startNewGame = function() {
     game = new Game();
     if(game.currentPlayer != humanPlayer) { game.playMove(AI.findBestMove(game.currentPlayer), game.currentPlayer); }
-    View.update();
+    Display.update();
   }
   var humanPlayer = "O";
 
@@ -21,7 +21,7 @@ $(function() {
 
       game.playMove(boxIndex, game.currentPlayer);
       if(game.currentPlayer != humanPlayer) { game.playMove(AI.findBestMove(game.currentPlayer), game.currentPlayer); }
-      View.update();
+      Display.update();
     }
   });
 

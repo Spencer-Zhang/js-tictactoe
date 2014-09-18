@@ -1,4 +1,4 @@
-var View = {
+var Display = {
   showMessage: function(message) {
     $('.message').text(message);
   },
