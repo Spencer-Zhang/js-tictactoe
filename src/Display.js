@@ -1,4 +1,5 @@
 function Display(gameInstance) {
+  
   this.update = function() {
     var i, winner, boxIndex;
     clear();
@@ -6,9 +7,11 @@ function Display(gameInstance) {
     showStatus();
   }
 
-  //Private
 
-  var game = gameInstance
+
+  // Private
+
+  var game = gameInstance;
 
   function showMessage(message) {
     $('.message').text(message);

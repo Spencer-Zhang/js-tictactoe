@@ -23,7 +23,7 @@ var Game = function() {
     getInstance: function() {
       if(!instance) { init(); }
       return instance;
-    },
+    }
   };
 }();
 
@@ -48,7 +48,7 @@ function GameClass() {
   }
 
   this.playMove = function(boxIndex, player) {
-    if(this.board[boxIndex] !== "X" && this.board[boxIndex] !== "O") {
+    if(this.isPlaying() && this.board[boxIndex] === undefined) {
       this.board[boxIndex] = player;
       this.advanceTurn();
     }
@@ -92,12 +92,10 @@ function GameClass() {
   }
 
   this.advanceTurn = function() {
-    if(this.isPlaying() === true) {
-      if(this.currentPlayer === "X") {
-        this.currentPlayer = "O";
-      } else {
-        this.currentPlayer = "X";
-      }
+    if(this.currentPlayer === "X") {
+      this.currentPlayer = "O";
+    } else {
+      this.currentPlayer = "X";
     }
   }
 };

@@ -58,12 +58,20 @@ describe("Game", function() {
       game.playMove(0, "X");
       expect(game.board[0]).toEqual("O");
     });
+
+    it("should not fill a box if the game is already over", function() {
+      game.board[0] = "X";
+      game.board[1] = "X";
+      game.board[2] = "X";
+      game.playMove(3, "O");
+      expect(game.board[3]).toEqual(undefined);
+    })
   });
 
 
 
   describe("#checkWinner", function() {
-    it("returns falsy if no player has won", function() {
+    it("returns false if no player has won", function() {
       expect(game.winnerExists()).toEqual(false);;
     })
 
