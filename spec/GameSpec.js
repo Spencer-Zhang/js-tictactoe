@@ -140,14 +140,14 @@ describe("AI", function() {
         game.board[1] = "O";
         game.board[3] = "O";
         game.board[4] = "X";
-        expect(AI.findBestMove("X")).toEqual(0);
+        expect([0, 2, 6]).toContain(AI.findBestMove("X"));
       })
 
       it("Case 2", function() {
         game.board[5] = "O";
         game.board[7] = "O";
         game.board[4] = "X";
-        expect(AI.findBestMove("X")).toEqual(8);
+        expect([2, 6, 8]).toContain(AI.findBestMove("X"));
       })
     })
   })
