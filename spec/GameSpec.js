@@ -99,38 +99,40 @@ describe("Game", function() {
 
 
 
-describe("#findBestMove", function() {
-  beforeEach(function() {
-    Game.reset();
+describe("AI", function() {
+  describe("#findBestMove", function() {
+    beforeEach(function() {
+      Game.reset();
+    })
+
+    it("should prioritize the center position on a blank board", function() {
+      expect(AI.findBestMove("X")).toEqual(4);
+    });
+
+    it("should play in a corner if the opponent plays center first", function() {
+      Game.board[4] = "O";
+      expect([0, 2,6,8]).toContain(AI.findBestMove("X"));
+    })
+
+    it("should complete one of its own lanes if possible", function() {
+      Game.board[0] = "X";
+      Game.board[1] = "X";
+      expect(AI.findBestMove("X")).toEqual(2);
+    });
+
+    it("should block the other player's lanes if needed", function() {
+      Game.board[0] = "O";
+      Game.board[1] = "O";
+      expect(AI.findBestMove("X")).toEqual(2);
+    });
+
+    it("should prioritize completing its own lane over blocking the enemy", function() {
+      Game.board[0] = "X";
+      Game.board[1] = "X";
+      Game.board[3] = "O";
+      Game.board[4] = "O";
+      expect(AI.findBestMove("X")).toEqual(2);
+      expect(AI.findBestMove("O")).toEqual(5);
+    });
   })
-
-  it("should prioritize the center position on a blank board", function() {
-    expect(findBestMove("X")).toEqual(4);
-  });
-
-  it("should play in a corner if the opponent plays center first", function() {
-    Game.board[4] = "O";
-    expect([0, 2,6,8]).toContain(findBestMove("X"));
-  })
-
-  it("should complete one of its own lanes if possible", function() {
-    Game.board[0] = "X";
-    Game.board[1] = "X";
-    expect(findBestMove("X")).toEqual(2);
-  });
-
-  it("should block the other player's lanes if needed", function() {
-    Game.board[0] = "O";
-    Game.board[1] = "O";
-    expect(findBestMove("X")).toEqual(2);
-  });
-
-  it("should prioritize completing its own lane over blocking the enemy", function() {
-    Game.board[0] = "X";
-    Game.board[1] = "X";
-    Game.board[3] = "O";
-    Game.board[4] = "O";
-    expect(findBestMove("X")).toEqual(2);
-    expect(findBestMove("O")).toEqual(5);
-  });
-})
+});
