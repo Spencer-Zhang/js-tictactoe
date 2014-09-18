@@ -1,19 +1,18 @@
-var AI = {
-  game: Game.getInstance(),
-  moveValueMap: [],
+function AI(gameInstance) {
+  this.game = gameInstance
+  this.moveValueMap = []
 
-  addValue: function(boxes, value) {
+  this.addValue = function(boxes, value) {
     for(boxIndex in boxes) {
       box = boxes[boxIndex];
       this.moveValueMap[box] += value;
     }
-  },
+  }
 
-  calculateValuesOfPossibleMoves: function(player) {
+  this.calculateValuesOfPossibleMoves = function(player) {
     var numMine, numOther;
     var laneIndex, boxes, count;
-    var TOP_PRIORITY = 1000;
-    var NORMAL_PRIORITY = 10;
+    var TOP_PRIORITY = 1000, NORMAL_PRIORITY = 10;
 
     this.moveValueMap = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
@@ -30,9 +29,9 @@ var AI = {
       if(numOther === 1 && numMine === 0) { this.addValue(boxes, 1.5 * NORMAL_PRIORITY); }
       if(numOther === 0 && numMine === 0) { this.addValue(boxes, 1.0 * NORMAL_PRIORITY); }
     }
-  },
+  }
 
-  moveWithHighestValue: function() {
+  this.moveWithHighestValue = function() {
     var boxIndex
     var highestValue = -1;
     var highestIndex;
@@ -45,9 +44,9 @@ var AI = {
     }
 
     return highestIndex;
-  },
+  }
 
-  findBestMove: function(player) {
+  this.findBestMove = function(player) {
     this.calculateValuesOfPossibleMoves(player)    
     return this.moveWithHighestValue();
   }
