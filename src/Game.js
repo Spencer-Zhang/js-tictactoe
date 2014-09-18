@@ -21,9 +21,7 @@ var Game = function() {
 
   return {
     getInstance: function() {
-      if(!instance) {
-        init();
-      }
+      if(!instance) { init(); }
       return instance;
     },
   };
@@ -37,12 +35,12 @@ function GameClass() {
     this.currentPlayer = "O";
   }
 
-  this.countPieces = function(boxes) {
-    boxes = boxes || [0,1,2,3,4,5,6,7,8];
+  this.countPieces = function(lane) {
+    lane = lane || [0,1,2,3,4,5,6,7,8];
     var boxIndex, box;
     var count = { O: 0, X: 0 };
-    for(boxIndex in boxes) {
-      box = boxes[boxIndex];
+    for(boxIndex in lane) {
+      box = lane[boxIndex];
       if(this.board[box] == "O") { count.O += 1; }
       if(this.board[box] == "X") { count.X += 1; }
     }
@@ -66,11 +64,11 @@ function GameClass() {
   }
 
   this.winnerExists = function() {
-    var laneIndex, boxes, count;
+    var laneIndex, lane, count;
 
     for(laneIndex=0; laneIndex<8; laneIndex++) {
-      boxes = LANES[laneIndex];
-      count = this.countPieces(boxes);
+      lane = LANES[laneIndex];
+      count = this.countPieces(lane);
       
       if(count.O === 3 || count.X === 3) {
         return true;
@@ -80,11 +78,11 @@ function GameClass() {
   }
 
   this.getWinnerData = function() {
-    var laneIndex, boxes, count;
+    var laneIndex, lane, count;
 
     for(laneIndex=0; laneIndex<8; laneIndex++) {
-      boxes = LANES[laneIndex];
-      count = this.countPieces(boxes);
+      lane = LANES[laneIndex];
+      count = this.countPieces(lane);
       
       if(count.O === 3 || count.X === 3) {
         if(count.O === 3) { return {player:"O", lane:laneIndex}; }

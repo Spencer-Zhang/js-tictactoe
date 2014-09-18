@@ -1,7 +1,8 @@
 function AI(gameInstance) {
+  
   this.findBestMove = function(player) {
     calculateValuesOfPossibleMoves(player)    
-    return  moveWithHighestValue();
+    return moveWithHighestValue();
   }
 
   // Private
@@ -9,31 +10,30 @@ function AI(gameInstance) {
   var game = gameInstance;
   var valueMap = [];
 
-  function addValue(boxes, value) {
-    var boxIndex, box;
-    for(boxIndex in boxes) {
-      box = boxes[boxIndex];
-      valueMap[box] += value;
-    }
-  }
-
   function calculateValuesOfPossibleMoves(player) {
     var numMine, numOther;
-    var laneIndex, boxes, count;
+    var laneIndex, lane, count;
 
     valueMap = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
     for(laneIndex=0; laneIndex<8; laneIndex++) {
-      boxes = LANES[laneIndex];
-      count = game.countPieces(boxes);      
-      numMine = count[player];
-      numOther = count.O + count.X - numMine;
-
-      addValue(boxes, calculateLaneValue(numMine, numOther));
+      lane = LANES[laneIndex];
+      addValue(lane, calculateLaneValue(lane, player));
     }
   }
 
-  function calculateLaneValue(numMine, numOther) {
+  function addValue(lane, value) {
+    var boxIndex, box;
+    for(boxIndex in lane) {
+      box = lane[boxIndex];
+      valueMap[box] += value;
+    }
+  }
+
+  function calculateLaneValue(lane, player) {
+    var count = game.countPieces(lane);      
+    var numMine = count[player];
+    var numOther = count.O + count.X - numMine;
     var TOP_PRIORITY = 1000, NORMAL_PRIORITY = 10;
 
     if(numOther === 0 && numMine === 2) { return(1.0 * TOP_PRIORITY); }
