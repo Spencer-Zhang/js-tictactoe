@@ -5,8 +5,10 @@
 // Improve test coverage of findBestMove
 
 $(function() {
+  var game = Game.getInstance();
+
   var startNewGame = function() {
-    game = new Game();
+    game.reset();
     if(game.currentPlayer != humanPlayer) { game.playMove(AI.findBestMove(game.currentPlayer), game.currentPlayer); }
     Display.update();
   }

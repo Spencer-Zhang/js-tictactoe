@@ -1,6 +1,8 @@
+var game = Game.getInstance();
+
 describe("Game", function() {
   beforeEach(function() {
-    game = new Game();
+    game.reset();
   })
 
   describe("#reset", function() {
@@ -54,18 +56,27 @@ describe("Game", function() {
 
   describe("#checkWinner", function() {
     it("returns falsy if no player has won", function() {
-      expect(game.checkWinner()).toBeFalsy();
+      expect(game.winnerExists()).toEqual(false);;
     })
 
     it("return the winning player and lane if a row is filled", function() {
       game.board[0] = "X";
       game.board[1] = "X";
       game.board[2] = "X";
-      winner = game.checkWinner()
+      expect(game.winnerExists()).toEqual(true);
+    });
+  });
+
+  describe("#getWinnerData", function() {
+    it("return the winning player and lane if a row is filled", function() {
+      game.board[0] = "X";
+      game.board[1] = "X";
+      game.board[2] = "X";
+      winner = game.getWinnerData();
       expect(winner.player).toEqual("X");
       expect(winner.lane).toEqual(0);
     });
-  });
+  })
 
   describe("#isTied", function() {
     it("returns true if all spaces on the board are filled", function() {
@@ -102,7 +113,7 @@ describe("Game", function() {
 describe("AI", function() {
   describe("#findBestMove", function() {
     beforeEach(function() {
-      game = new Game();
+      game.reset();
     })
 
     it("should prioritize the center position on a blank board", function() {

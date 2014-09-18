@@ -9,11 +9,33 @@ var LANES = [
   [2,4,6]
 ];
 
-var game;
 
-function Game() {
-  this.board = Array(9);
-  this.currentPlayer = "O";
+
+var Game = function() {
+  var instance;
+
+  function init() {
+    instance = new GameClass();
+    instance.reset();
+  }
+
+  return {
+    getInstance: function() {
+      if(!instance) {
+        init();
+      }
+      return instance;
+    },
+  };
+}();
+
+
+
+function GameClass() {
+  this.reset = function() {
+    this.board = Array(9);
+    this.currentPlayer = "O";
+  }
 
   this.countPieces = function(boxes) {
     boxes = boxes || [0,1,2,3,4,5,6,7,8];
@@ -35,10 +57,29 @@ function Game() {
   }
 
   this.isPlaying = function() {
-    return(this.checkWinner() === false && this.isTied() === false);
+    return(this.winnerExists() === false && this.isTied() === false);
   }
 
-  this.checkWinner = function() {
+  this.isTied = function() {
+    var count = this.countPieces();
+    return(count.O + count.X === 9);
+  }
+
+  this.winnerExists = function() {
+    var laneIndex, boxes, count;
+
+    for(laneIndex=0; laneIndex<8; laneIndex++) {
+      boxes = LANES[laneIndex];
+      count = this.countPieces(boxes);
+      
+      if(count.O === 3 || count.X === 3) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  this.getWinnerData = function() {
     var laneIndex, boxes, count;
 
     for(laneIndex=0; laneIndex<8; laneIndex++) {
@@ -50,12 +91,6 @@ function Game() {
         if(count.X === 3) { return {player:"X", lane:laneIndex}; }
       }
     }
-    return false;
-  }
-
-  this.isTied = function() {
-    var count = this.countPieces();
-    return(count.O + count.X === 9);
   }
 
   this.advanceTurn = function() {
