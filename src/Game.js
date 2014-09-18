@@ -36,9 +36,10 @@ function GameClass() {
   }
 
   this.countPieces = function(lane) {
-    lane = lane || [0,1,2,3,4,5,6,7,8];
     var boxIndex, box;
     var count = { O: 0, X: 0 };
+    lane = lane || [0,1,2,3,4,5,6,7,8];
+
     for(boxIndex in lane) {
       box = lane[boxIndex];
       if(this.board[box] == "O") { count.O += 1; }
@@ -51,6 +52,14 @@ function GameClass() {
     if(this.isPlaying() && this.board[boxIndex] === undefined) {
       this.board[boxIndex] = player;
       this.advanceTurn();
+    }
+  }
+
+  this.advanceTurn = function() {
+    if(this.currentPlayer === "X") {
+      this.currentPlayer = "O";
+    } else {
+      this.currentPlayer = "X";
     }
   }
 
@@ -88,14 +97,6 @@ function GameClass() {
         if(count.O === 3) { return {player:"O", lane:laneIndex}; }
         if(count.X === 3) { return {player:"X", lane:laneIndex}; }
       }
-    }
-  }
-
-  this.advanceTurn = function() {
-    if(this.currentPlayer === "X") {
-      this.currentPlayer = "O";
-    } else {
-      this.currentPlayer = "X";
     }
   }
 };

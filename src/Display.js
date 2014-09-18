@@ -15,7 +15,7 @@ function Display(gameInstance) {
 
   function showMessage(message) {
     $('.message').text(message);
-  }
+  };
 
   function clear() {
     var i;
@@ -23,7 +23,7 @@ function Display(gameInstance) {
       $('#b' + i).css('background-color', 'white');
       $("#b" + i).text('');
     }
-  }
+  };
 
   function drawPieces() {
     var i;
@@ -32,7 +32,7 @@ function Display(gameInstance) {
         $("#b" + i).text(game.board[i]);
       }
     }
-  }
+  };
 
   function showStatus() {
     if(game.winnerExists()) {
@@ -48,5 +48,5 @@ function Display(gameInstance) {
     else {
       showMessage("");
     }
-  }
+  };
 }
