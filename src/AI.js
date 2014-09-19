@@ -2,6 +2,7 @@ function AI(gameInstance) {
 
   this.findBestMove = function(player) {
     calculateValuesOfMoves(player);
+    removeIllegalMoves();
     return moveWithHighestValue();
   }
 
@@ -21,12 +22,6 @@ function AI(gameInstance) {
     for(laneIndex=0; laneIndex<8; laneIndex++) {
       lane = LANES[laneIndex];
       addValue(lane, calculateLaneValue(lane, player));
-    }
-
-    for(boxIndex=0; boxIndex<9; boxIndex++) {
-      if(game.board[boxIndex] !== undefined) {
-        valueMap[boxIndex] = -1;
-      }
     }
   }
 
@@ -52,6 +47,14 @@ function AI(gameInstance) {
     if(numOther === 0 && numMine === 0) { return(1.0 * NORMAL_PRIORITY); }
 
     return 0;
+  }
+
+  function removeIllegalMoves() {
+    for(boxIndex=0; boxIndex<9; boxIndex++) {
+      if(game.board[boxIndex] !== undefined) {
+        valueMap[boxIndex] = -1;
+      }
+    }
   }
 
   function moveWithHighestValue() {

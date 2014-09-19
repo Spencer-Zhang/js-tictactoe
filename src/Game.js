@@ -12,6 +12,7 @@ var LANES = [
 
 
 var Game = function() {
+  // Singleton
   var instance;
 
   function init() {
