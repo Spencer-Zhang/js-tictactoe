@@ -18,7 +18,9 @@ function AIPlayer(gameInstance) {
     var numMine, numOther;
     var laneIndex, lane, count;
 
-    valueMap = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    valueMap = [ 0, 0, 0, 
+                 0, 0, 0, 
+                 0, 0, 0 ];
 
     for(laneIndex=0; laneIndex<8; laneIndex++) {
       lane = LANES[laneIndex];

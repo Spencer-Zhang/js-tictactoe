@@ -54,6 +54,23 @@ describe("AIPlayer", function() {
         game.board[4] = "X";
         expect([2, 6, 8]).toContain(cpuPlayer.findBestMove("X"));
       })
+
+      it("Case 3", function() {
+        game.board[3] = "O";
+        game.board[4] = "X";
+        game.board[5] = "O";
+        expect([0,2,6,8]).toContain(cpuPlayer.findBestMove("X"));
+        game.board[0] = "X";
+        game.board[8] = "O";
+        expect([1,2]).toContain(cpuPlayer.findBestMove("X"));
+      })
+
+      it("Case 4", function() {
+        game.board[0] = "O";
+        game.board[4] = "X";
+        game.board[8] = "O";
+        expect([1,3,5,7]).toContain(cpuPlayer.findBestMove("X"));
+      })
     })
   })
 });
