@@ -38,15 +38,16 @@ function GameClass() {
     this.currentPlayer = "O";
   }
 
-  this.countPieces = function(lane) {
+  this.countPieces = function(lane, board) {
     var boxIndex, box;
     var count = { O: 0, X: 0 };
     lane = lane || [0,1,2,3,4,5,6,7,8];
+    board = board || this.board;
 
     for(boxIndex in lane) {
       box = lane[boxIndex];
-      if(this.board[box] == "O") { count.O += 1; }
-      if(this.board[box] == "X") { count.X += 1; }
+      if(board[box] == "O") { count.O += 1; }
+      if(board[box] == "X") { count.X += 1; }
     }
     return count;
   }
