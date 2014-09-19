@@ -1,16 +1,18 @@
 function AI(gameInstance) {
-  
+
   this.findBestMove = function(player) {
-    calculateValuesOfPossibleMoves(player)    
+    calculateValuesOfMoves(player);
     return moveWithHighestValue();
   }
+
+
 
   // Private
 
   var game = gameInstance;
   var valueMap = [];
 
-  function calculateValuesOfPossibleMoves(player) {
+  function calculateValuesOfMoves(player) {
     var numMine, numOther;
     var laneIndex, lane, count;
 
@@ -19,6 +21,12 @@ function AI(gameInstance) {
     for(laneIndex=0; laneIndex<8; laneIndex++) {
       lane = LANES[laneIndex];
       addValue(lane, calculateLaneValue(lane, player));
+    }
+
+    for(boxIndex=0; boxIndex<9; boxIndex++) {
+      if(game.board[boxIndex] !== undefined) {
+        valueMap[boxIndex] = -1;
+      }
     }
   }
 
@@ -47,17 +55,7 @@ function AI(gameInstance) {
   }
 
   function moveWithHighestValue() {
-    var boxIndex;
-    var highestValue = -1;
-    var highestIndex;
-
-    for(boxIndex = 0; boxIndex < 9; boxIndex++) {
-      if(game.board[boxIndex] === undefined && valueMap[boxIndex] > highestValue) {
-        highestValue = valueMap[boxIndex];
-        highestIndex = boxIndex;
-      }
-    }
-
-    return highestIndex;
+    var maxValue = Math.max.apply(Math, valueMap);
+    return valueMap.indexOf(maxValue);
   }
 }
