@@ -1,7 +1,7 @@
 $(function() {
   var game = Game.getInstance();
   var display = new Display(game);
-  var cpuPlayer = new AI(game);
+  var cpuPlayer = new AIPlayer(game);
   var humanPlayer = "O";
 
   $('.box').click(function() {

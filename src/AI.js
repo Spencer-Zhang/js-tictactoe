@@ -1,7 +1,8 @@
-function AI(gameInstance) {
+function AIPlayer(gameInstance) {
 
   this.findBestMove = function(player) {
     calculateValuesOfMoves(player);
+    accountForEdgeCase(player);
     removeIllegalMoves();
     return moveWithHighestValue();
   }
@@ -47,6 +48,21 @@ function AI(gameInstance) {
     if(numOther === 0 && numMine === 0) { return(1.0 * NORMAL_PRIORITY); }
 
     return 0;
+  }
+
+  function accountForEdgeCase(player) {
+    var myPiece = player;
+    var otherPiece = myPiece === "O" ? "X" : "O";
+    var count = game.countPieces();
+
+    if(count.O + count.X === 3 && game.board[4] === myPiece) {
+      if( (game.board[0] === otherPiece && game.board[8] === otherPiece) || (game.board[2] === otherPiece && game.board[6] === otherPiece) ) {
+        valueMap[0] -= 50;
+        valueMap[2] -= 50;
+        valueMap[6] -= 50;
+        valueMap[8] -= 50;
+      }
+    };
   }
 
   function removeIllegalMoves() {

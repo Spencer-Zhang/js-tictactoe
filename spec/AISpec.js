@@ -1,7 +1,7 @@
 var game = Game.getInstance();
-var cpuPlayer = new AI(game);
+var cpuPlayer = new AIPlayer(game);
 
-describe("AI", function() {
+describe("AIPlayer", function() {
 
   describe("#findBestMove", function() {
     beforeEach(function() {

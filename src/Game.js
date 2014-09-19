@@ -17,7 +17,6 @@ var Game = function() {
 
   function init() {
     instance = new GameClass();
-    instance.reset();
   }
 
   return {
@@ -31,6 +30,9 @@ var Game = function() {
 
 
 function GameClass() {
+  this.board = Array(9);
+  this.currentPlayer = "O";
+
   this.reset = function() {
     this.board = Array(9);
     this.currentPlayer = "O";
