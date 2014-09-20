@@ -6,7 +6,7 @@ function AIPlayer() {
 
   this.findBestMoves = function(player) {
     var boxIndex, board;
-    var highestValue = -5;
+    var highestValue = status.LOSE;
     var bestMoves = [];
 
     if(winnable(player)) { return([getWinningMove(player)]); }
@@ -80,7 +80,7 @@ function AIPlayer() {
 
 
 
-  function testForEndpoint(board, player) {
+  function checkStoppingConditions(board, player) {
     var laneIndex, lane, count;
     var otherPlayer = player === "X" ? "O" : "X";
 
@@ -101,20 +101,20 @@ function AIPlayer() {
   }
 
   function evaluateBoardPosition(board, player) {
-    var boxIndex, newBoard, value;
+    var boxIndex, newBoard, positionStatus;
     var worstCaseStatus = status.WIN;
     var otherPlayer = player === "X" ? "O" : "X";
 
-    testForEndpoint(board, player);
+    checkStoppingConditions(board, player);
     if(memo[[board, player]] !== undefined) { return memo[[board, player]]; }
 
     for(boxIndex = 0; boxIndex < 9; boxIndex++) {
       if(board[boxIndex] === undefined) {
         newBoard = cloneBoard(board);
         newBoard[boxIndex] = otherPlayer;
-        value = -1 * evaluateBoardPosition(newBoard, otherPlayer);
+        positionStatus = -1 * evaluateBoardPosition(newBoard, otherPlayer);
 
-        if(value < worstCaseStatus) {worstCaseStatus = value;}
+        if(positionStatus < worstCaseStatus) {worstCaseStatus = positionStatus;}
       };
     }
 
