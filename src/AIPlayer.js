@@ -6,7 +6,7 @@ function AIPlayer() {
 
   this.findBestMoves = function(player) {
     var boxIndex, board;
-    var highestValue = status.LOSE;
+    var bestOutcome = status.LOSE;
     var bestMoves = [];
 
     if(winnable(player)) { return([getWinningMove(player)]); }
@@ -16,12 +16,12 @@ function AIPlayer() {
         board = cloneBoard(game.board);
         board[boxIndex] = player;
 
-        if(evaluateBoardPosition(board, player) > highestValue) {
+        if(predictOutcome(board, player) > bestOutcome) {
           bestMoves = [];
-          highestValue = evaluateBoardPosition(board, player);
+          bestOutcome = predictOutcome(board, player);
         };
 
-        if(evaluateBoardPosition(board, player) === highestValue) {
+        if(predictOutcome(board, player) === bestOutcome) {
           bestMoves.push(boxIndex);
         }
       }
@@ -35,13 +35,6 @@ function AIPlayer() {
   // Private
 
   var game = Game.getInstance();
-  var memo = {}
-
-  var status = {
-    WIN: 1,
-    TIE: 0,
-    LOSE:-1
-  }
 
   function cloneBoard(board) {
     var newBoard = Array(9)
@@ -80,6 +73,14 @@ function AIPlayer() {
 
 
 
+  var memo = {}
+
+  var status = {
+    WIN: 1,
+    TIE: 0,
+    LOSE:-1
+  }
+
   function checkStoppingConditions(board, player) {
     var laneIndex, lane, count;
     var otherPlayer = player === "X" ? "O" : "X";
@@ -100,9 +101,9 @@ function AIPlayer() {
     }
   }
 
-  function evaluateBoardPosition(board, player) {
-    var boxIndex, newBoard, positionStatus;
-    var worstCaseStatus = status.WIN;
+  function predictOutcome(board, player) {
+    var boxIndex, newBoard, outcome;
+    var worstPossibleOutcome = status.WIN;
     var otherPlayer = player === "X" ? "O" : "X";
 
     checkStoppingConditions(board, player);
@@ -112,13 +113,13 @@ function AIPlayer() {
       if(board[boxIndex] === undefined) {
         newBoard = cloneBoard(board);
         newBoard[boxIndex] = otherPlayer;
-        positionStatus = -1 * evaluateBoardPosition(newBoard, otherPlayer);
+        outcome = -1 * predictOutcome(newBoard, otherPlayer);
 
-        if(positionStatus < worstCaseStatus) {worstCaseStatus = positionStatus;}
+        if(outcome < worstPossibleOutcome) {worstPossibleOutcome = outcome;}
       };
     }
 
-    memo[[board, player]] = worstCaseStatus;
-    return worstCaseStatus;
+    memo[[board, player]] = worstPossibleOutcome;
+    return worstPossibleOutcome;
   }
 }
