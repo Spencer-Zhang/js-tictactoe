@@ -1,4 +1,4 @@
-function Display(gameInstance) {
+function Display() {
   
   this.update = function() {
     var i, winner, boxIndex;
@@ -11,7 +11,7 @@ function Display(gameInstance) {
 
   // Private
 
-  var game = gameInstance;
+  var game = Game.getInstance();
 
   function showMessage(message) {
     $('.message').text(message);

@@ -1,29 +1,29 @@
 var globalMemo;
 
-function AIPlayer(gameInstance) {
-  this.findBestMove = function(player) {
-    if(winnable(player)) { return(winningMove(player)); }
-    return bestMove = getRandom(this.findBestMoves(player));
+function AIPlayer() {
+  this.takeTurn = function(player) {
+    var move = pickRandom(this.findBestMoves(player));
+    game.playMove(move, player);
   }
 
   this.findBestMoves = function(player) {
-    var boxIndex;
-    var board;
-
+    var boxIndex, board;
     var highestValue = -5;
     var bestMoves = [];
+
+    if(winnable(player)) { return([getWinningMove(player)]); }
 
     for(boxIndex = 0; boxIndex < 9; boxIndex++) {
       if(game.board[boxIndex] === undefined) {
         board = cloneBoard(game.board);
         board[boxIndex] = player;
 
-        if(this.evaluateBoardPosition(board, player) > highestValue) {
+        if(evaluateBoardPosition(board, player) > highestValue) {
           bestMoves = [];
-          highestValue = this.evaluateBoardPosition(board, player);
+          highestValue = evaluateBoardPosition(board, player);
         };
 
-        if(this.evaluateBoardPosition(board, player) === highestValue) {
+        if(evaluateBoardPosition(board, player) === highestValue) {
           bestMoves.push(boxIndex);
         }
       }
@@ -34,9 +34,19 @@ function AIPlayer(gameInstance) {
 
   // Private
 
-  var game = gameInstance;
+  var game = Game.getInstance();
   var memo = {}
 
+  var status = {
+    WIN: 1,
+    TIE: 0,
+    LOSE:-1
+  }
+
+  function pickRandom(array) {
+    var randomIndex = Math.floor(Math.random() * array.length)
+    return array[randomIndex]
+  }
 
   function winnable(player) {
     for(laneIndex = 0; laneIndex < 8; laneIndex++) {
@@ -50,7 +60,7 @@ function AIPlayer(gameInstance) {
     return false;
   }
 
-  function winningMove(player) {
+  function getWinningMove(player) {
     for(laneIndex = 0; laneIndex < 8; laneIndex++) {
       lane = LANES[laneIndex];
       count = game.countPieces(lane, game.board);
@@ -63,30 +73,17 @@ function AIPlayer(gameInstance) {
     }
   }
 
-
-
-  var status = {
-    WIN: 1,
-    TIE: 0,
-    LOSE:-1
-  }
-
   function testForEndpoint(board, player) {
     var laneIndex, lane, count;
     var otherPlayer = player === "X" ? "O" : "X";
 
     if(memo[[board, player]] === undefined) {
-
       for(laneIndex = 0; laneIndex < 8; laneIndex++) {
         lane = LANES[laneIndex];
         count = game.countPieces(lane, board);
 
-        if(count[player] === 3) {
-          memo[[board, player]] = status.WIN;
-        }
-        if(count[otherPlayer] === 3) {
-          memo[[board, player]] = status.LOSE;
-        }
+        if(count[player] === 3) { memo[[board, player]] = status.WIN; }
+        if(count[otherPlayer] === 3) { memo[[board, player]] = status.LOSE; }
       }
 
       count = game.countPieces(undefined, board);
@@ -96,7 +93,7 @@ function AIPlayer(gameInstance) {
     }
   }
 
-  this.evaluateBoardPosition = function(board, player) {
+  function evaluateBoardPosition(board, player) {
     var boxIndex;
     var lowestValue = 1;
     var otherPlayer = player === "X" ? "O" : "X";
@@ -108,7 +105,7 @@ function AIPlayer(gameInstance) {
       if(board[boxIndex] === undefined) {
         newBoard = cloneBoard(board);
         newBoard[boxIndex] = otherPlayer;
-        value = -1 * this.evaluateBoardPosition(newBoard, otherPlayer);
+        value = -1 * evaluateBoardPosition(newBoard, otherPlayer);
 
         if(value < lowestValue) {lowestValue = value;}
       };
@@ -124,10 +121,5 @@ function AIPlayer(gameInstance) {
       newBoard[i] = board[i];
     }
     return newBoard;
-  }
-
-  function getRandom(array) {
-    var randomIndex = Math.floor(Math.random() * array.length)
-    return array[randomIndex]
   }
 }
