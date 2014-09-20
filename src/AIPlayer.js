@@ -1,5 +1,3 @@
-var globalMemo;
-
 function AIPlayer() {
   this.takeTurn = function(player) {
     var move = pickRandom(this.findBestMoves(player));
@@ -32,6 +30,8 @@ function AIPlayer() {
     return bestMoves;
   }
 
+
+
   // Private
 
   var game = Game.getInstance();
@@ -43,6 +43,14 @@ function AIPlayer() {
     LOSE:-1
   }
 
+  function cloneBoard(board) {
+    var newBoard = Array(9)
+    for(i = 0; i < 9; i++) {
+      newBoard[i] = board[i];
+    }
+    return newBoard;
+  }
+
   function pickRandom(array) {
     var randomIndex = Math.floor(Math.random() * array.length)
     return array[randomIndex]
@@ -52,10 +60,7 @@ function AIPlayer() {
     for(laneIndex = 0; laneIndex < 8; laneIndex++) {
       lane = LANES[laneIndex];
       count = game.countPieces(lane, game.board);
-      if(count[player] === 2 && count.O+count.X === 2) {
-        console.log([lane,player])
-        return true;
-      }
+      if(count[player] === 2 && count.O+count.X === 2) { return true; }
     }
     return false;
   }
@@ -72,6 +77,8 @@ function AIPlayer() {
       }
     }
   }
+
+
 
   function testForEndpoint(board, player) {
     var laneIndex, lane, count;
@@ -94,12 +101,12 @@ function AIPlayer() {
   }
 
   function evaluateBoardPosition(board, player) {
-    var boxIndex;
-    var lowestValue = 1;
+    var boxIndex, newBoard, value;
+    var worstCaseStatus = status.WIN;
     var otherPlayer = player === "X" ? "O" : "X";
 
     testForEndpoint(board, player);
-    if(memo[[board, player]] !== undefined) { return memo[[board, player]] }
+    if(memo[[board, player]] !== undefined) { return memo[[board, player]]; }
 
     for(boxIndex = 0; boxIndex < 9; boxIndex++) {
       if(board[boxIndex] === undefined) {
@@ -107,19 +114,11 @@ function AIPlayer() {
         newBoard[boxIndex] = otherPlayer;
         value = -1 * evaluateBoardPosition(newBoard, otherPlayer);
 
-        if(value < lowestValue) {lowestValue = value;}
+        if(value < worstCaseStatus) {worstCaseStatus = value;}
       };
     }
 
-    memo[[board, player]] = lowestValue;
-    return lowestValue;
-  }
-
-  function cloneBoard(board) {
-    var newBoard = Array(9)
-    for(i = 0; i < 9; i++) {
-      newBoard[i] = board[i];
-    }
-    return newBoard;
+    memo[[board, player]] = worstCaseStatus;
+    return worstCaseStatus;
   }
 }
