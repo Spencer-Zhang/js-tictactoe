@@ -58,6 +58,14 @@ describe("AIPlayer", function() {
         game.board[8] = "O";
         expect([1,3,5,7]).toContain(cpuPlayer.findBestMove("X"));
       })
+
+      it("Case 4", function() {
+        game.board = ["O", "X", "O",
+                         , "X",    ,
+                      "X", "O", "O"];
+        console.log(cpuPlayer.findBestMoves("X"));
+        expect(cpuPlayer.findBestMoves("X")).toEqual([5]);
+      })
     })
   })
 });

@@ -3,7 +3,7 @@ var globalMemo;
 function AIPlayer(gameInstance) {
   this.findBestMove = function(player) {
     if(winnable(player)) { return(winningMove(player)); }
-    return getRandom(this.findBestMoves(player));
+    return bestMove = getRandom(this.findBestMoves(player));
   }
 
   this.findBestMoves = function(player) {
@@ -17,8 +17,6 @@ function AIPlayer(gameInstance) {
       if(game.board[boxIndex] === undefined) {
         board = cloneBoard(game.board);
         board[boxIndex] = player;
-
-        console.log([boxIndex, this.evaluateBoardPosition(board, player)]);
 
         if(this.evaluateBoardPosition(board, player) > highestValue) {
           bestMoves = [];
@@ -44,7 +42,8 @@ function AIPlayer(gameInstance) {
     for(laneIndex = 0; laneIndex < 8; laneIndex++) {
       lane = LANES[laneIndex];
       count = game.countPieces(lane, game.board);
-      if(count[player] === 2) {
+      if(count[player] === 2 && count.O+count.X === 2) {
+        console.log([lane,player])
         return true;
       }
     }
@@ -55,7 +54,7 @@ function AIPlayer(gameInstance) {
     for(laneIndex = 0; laneIndex < 8; laneIndex++) {
       lane = LANES[laneIndex];
       count = game.countPieces(lane, game.board);
-      if(count[player] === 2) {
+      if(count[player] === 2 && count.O+count.X === 2) {
         for(boxIndex in lane) {
           box = lane[boxIndex];
           if(game.board[box] === undefined) { return box }
@@ -92,7 +91,7 @@ function AIPlayer(gameInstance) {
 
       count = game.countPieces(undefined, board);
       if(count.X + count.O === 9) {
-        memo[[board, player]] = status.TIE; 
+        memo[[board, player]] = memo[[board, player]] || status.TIE; 
       }
     }
   }
