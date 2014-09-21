@@ -116,6 +116,13 @@ describe("Game", function() {
                     "O", "X", "X"];
       expect(game.isTied()).toEqual(true);
     })
+
+    if("returns false if all spaces on the board are filled, but a winner exists", function() {
+      game.board = ["X", "O", "O", 
+                    "O", "X", "O", 
+                    "X", "O", "X"];
+      expect(game.isTied()).toEqual(false);
+    })
   })
 
   

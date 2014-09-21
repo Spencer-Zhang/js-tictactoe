@@ -52,7 +52,7 @@ function AIPlayer() {
   function winnable(player) {
     for(laneIndex = 0; laneIndex < 8; laneIndex++) {
       lane = LANES[laneIndex];
-      count = game.countPieces(lane, game.board);
+      count = game.countPieces(lane);
       if(count[player] === 2 && count.O+count.X === 2) { return true; }
     }
     return false;
@@ -61,7 +61,7 @@ function AIPlayer() {
   function getWinningMove(player) {
     for(laneIndex = 0; laneIndex < 8; laneIndex++) {
       lane = LANES[laneIndex];
-      count = game.countPieces(lane, game.board);
+      count = game.countPieces(lane);
       if(count[player] === 2 && count.O+count.X === 2) {
         for(boxIndex in lane) {
           box = lane[boxIndex];
@@ -84,19 +84,18 @@ function AIPlayer() {
   function checkStoppingConditions(board, player) {
     var laneIndex, lane, count;
     var otherPlayer = player === "X" ? "O" : "X";
+    var tempGame;
 
-    if(memo[[board, player]] === undefined) {
-      for(laneIndex = 0; laneIndex < 8; laneIndex++) {
-        lane = LANES[laneIndex];
-        count = game.countPieces(lane, board);
+    if(memo[[board,player]] === undefined) {
+      tempGame = new GameClass(board); 
 
-        if(count[player] === 3) { memo[[board, player]] = status.WIN; }
-        if(count[otherPlayer] === 3) { memo[[board, player]] = status.LOSE; }
-      }
+      if(!tempGame.isPlaying()) {
+        if(tempGame.winnerExists()) {
+          if( tempGame.getWinnerData().player === player ) { memo[[board, player]] = status.WIN }
+          else { memo[[board, player]] = status.LOSE }
+        }
 
-      count = game.countPieces(undefined, board);
-      if(count.X + count.O === 9) {
-        memo[[board, player]] = memo[[board, player]] || status.TIE; 
+        if(tempGame.isTied()) { memo[[board, player]] = status.TIE }
       }
     }
   }
