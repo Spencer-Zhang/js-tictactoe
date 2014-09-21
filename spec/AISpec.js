@@ -8,6 +8,10 @@ describe("AIPlayer", function() {
       Game.reset();
     })
 
+    it("should return an array of all moves when the board is blank", function() {
+      expect(cpuPlayer.findBestMoves("X")).toEqual([0,1,2,3,4,5,6,7,8]);
+    })
+
     it("should play in a corner if the opponent plays center first", function() {
       game().board[4] = "O";
       expect(cpuPlayer.findBestMoves("X")).toEqual([0,2,6,8]);

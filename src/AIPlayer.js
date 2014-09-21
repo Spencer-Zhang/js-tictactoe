@@ -9,8 +9,6 @@ function AIPlayer() {
     var bestOutcome = status.LOSE;
     var bestMoves = [];
 
-    if(winnable(player)) { return([getWinningMove(player)]); }
-
     for(boxIndex = 0; boxIndex < 9; boxIndex++) {
       if(game().board[boxIndex] === undefined) {
         board = cloneBoard(game().board);
@@ -49,27 +47,6 @@ function AIPlayer() {
     return array[randomIndex]
   }
 
-  function winnable(player) {
-    for(laneIndex in LANES) {
-      count = game().countPiecesInLane(laneIndex);
-      if(count[player] === 2 && count.O+count.X === 2) { return true; }
-    }
-    return false;
-  }
-
-  function getWinningMove(player) {
-    for(laneIndex in LANES) {
-      lane = LANES[laneIndex];
-      count = game().countPiecesInLane(laneIndex);
-      if(count[player] === 2 && count.O+count.X === 2) {
-        for(boxIndex in lane) {
-          box = lane[boxIndex];
-          if(game().board[box] === undefined) { return box }
-        }
-      }
-    }
-  }
-
 
 
   var memo = {}
@@ -86,8 +63,6 @@ function AIPlayer() {
 
     if(memo[[board,player]] === undefined) {
       testGame = new GameClass(board); 
-
-      console.log(depth);
 
       if(testGame.isWinner(player) )          { memo[[board, player]] = status.WIN - depth; }
       else if(testGame.isWinner(otherPlayer)) { memo[[board, player]] = status.LOSE + depth; }
