@@ -38,7 +38,6 @@ function Display() {
   function highlightWinningLanes() {
     var lane, box;
     var winningLanes = game().getWinningLanes();
-    console.log(winningLanes);
     for(laneIndex in winningLanes) {
       lane = winningLanes[laneIndex];
       for(boxIndex in lane) {
