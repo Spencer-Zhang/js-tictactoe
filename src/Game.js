@@ -5,8 +5,8 @@ var LANES = {
   LEFT_COLUMN: [0,3,6],
   MIDDLE_COLUMN: [1,4,7],
   RIGHT_COLUMN: [2,5,8],
-  DOWNWARDS_DIAGONAL: [0,4,8],
-  UPWARDS_DIAGONAL: [2,4,6]
+  DOWNWARD_DIAGONAL: [0,4,8],
+  UPWARD_DIAGONAL: [2,4,6]
 };
 
 
@@ -78,28 +78,29 @@ function GameClass(board) {
   }
 
   this.winnerExists = function() {
-    var laneIndex, count;
+    return(this.getWinningLanes().length > 0);
+  }
 
-    for(laneIndex in LANES) {
-      count = this.countPiecesInLane(laneIndex);
-      
-      if(count.O === 3 || count.X === 3) {
+  this.isWinner = function(player) {
+    var winningLanes = this.getWinningLanes()
+    for(index in winningLanes) {
+      box = winningLanes[index][0]
+      if(this.board[box] === player) {
         return true;
       }
     }
     return false;
   }
 
-  this.getWinnerData = function() {
+  this.getWinningLanes = function() {
     var laneIndex, count;
+    var winningLanes = [];
 
     for(laneIndex in LANES) {
       count = this.countPiecesInLane(laneIndex);
-      
-      if(count.O === 3 || count.X === 3) {
-        if(count.O === 3) { return {player:"O", lane:LANES[laneIndex]}; }
-        if(count.X === 3) { return {player:"X", lane:LANES[laneIndex]}; }
-      }
+      if(count.O === 3 || count.X === 3) { winningLanes.push(LANES[laneIndex]); }
     }
+
+    return winningLanes;
   }
 };

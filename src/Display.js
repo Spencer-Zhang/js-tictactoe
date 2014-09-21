@@ -4,6 +4,7 @@ function Display() {
     var i, winner, boxIndex;
     clear();
     drawPieces();
+    highlightWinningLanes;
     showStatus();
   }
 
@@ -34,13 +35,24 @@ function Display() {
     }
   };
 
-  function showStatus() {
-    if(game().winnerExists()) {
-      winner = game().getWinnerData();
-      for(boxIndex in winner.lane) {
-        $('#b' + winner.lane[boxIndex]).css('background-color', 'red');
+  function highlightWinningLanes() {
+    var lane, box;
+    var winningLanes = game().getWinningLanes();
+    for(laneIndex in winninglanes) {
+      lane = winningLanes[laneIndex];
+      for(boxIndex in lane) {
+        box = lane[boxIndex]
+        $('#b' + box).css('background-color', 'red');
       }
-      showMessage("Player " + winner.player + " wins!");
+    }
+  }
+
+  function showStatus() {
+    if(game().isWinner("O")) {
+      showMessage("Player O wins!");
+    }
+    else if(game().isWinner("X")) {
+      showMessage("Player X wins!");
     }
     else if(game().isTied()) {
       showMessage("Cat's game");

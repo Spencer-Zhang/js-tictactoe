@@ -94,20 +94,46 @@ describe("Game", function() {
     });
   });
 
-  
 
-  describe("#getWinnerData", function() {
-    it("return the winning player and lane if a row is filled", function() {
+
+  describe("#isWinner", function() {
+    beforeEach(function() {
       game().board[0] = "X";
       game().board[1] = "X";
       game().board[2] = "X";
-      winner = game().getWinnerData();
-      expect(winner.player).toEqual("X");
-      expect(winner.lane).toEqual([0, 1, 2]);
+    })
+
+    it("returns true if a player is the winner", function() {
+      expect(game().isWinner("X")).toEqual(true);
+    })
+
+    it("returns false otherwise", function() {
+      expect(game().isWinner("O")).toEqual(false);
+    })
+  })
+
+  
+
+  describe("#getWinningLanes", function() {
+    it("return the lanes if a row is filled", function() {
+      game().board[0] = "X";
+      game().board[1] = "X";
+      game().board[2] = "X";
+
+      expect(game().getWinningLanes()).toContain([0, 1, 2]);
     });
 
-    it("returns undefined if there is no winner", function() {
-      expect(game().getWinnerData()).toEqual(undefined);
+    it("returns multiple lanes if multiple lanes are filled", function() {
+      game().board = ["X", "X", "X",
+                      "X",    ,    ,
+                      "X",    ,    ];
+      expect(game().getWinningLanes().length).toEqual(2);
+      expect(game().getWinningLanes()).toContain([0, 1, 2]);
+      expect(game().getWinningLanes()).toContain([0, 3, 6]);
+    })
+
+    it("returns an empty array if there is no winner", function() {
+      expect(game().getWinningLanes().length).toEqual(0);
     });
   })
 

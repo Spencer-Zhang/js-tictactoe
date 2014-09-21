@@ -81,21 +81,15 @@ function AIPlayer() {
   }
 
   function checkStoppingConditions(board, player) {
-    var laneIndex, lane, count;
     var otherPlayer = player === "X" ? "O" : "X";
-    var tempGame;
+    var testGame;
 
     if(memo[[board,player]] === undefined) {
-      tempGame = new GameClass(board); 
+      testGame = new GameClass(board); 
 
-      if(!tempGame.isPlaying()) {
-        if(tempGame.winnerExists()) {
-          if( tempGame.getWinnerData().player === player ) { memo[[board, player]] = status.WIN }
-          else { memo[[board, player]] = status.LOSE }
-        }
-
-        if(tempGame.isTied()) { memo[[board, player]] = status.TIE }
-      }
+      if(testGame.isWinner(player) ) { memo[[board, player]] = status.WIN; }
+      else if(testGame.isWinner(otherPlayer)) { memo[[board, player]] = status.LOSE; }
+      else if(testGame.isTied()) { memo[[board, player]] = status.TIE }
     }
   }
 

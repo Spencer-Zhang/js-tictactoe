@@ -28,8 +28,8 @@ describe("AIPlayer", function() {
 
     it("should prioritize completing its own lane over blocking the enemy", function() {
       game().board = ["X", "X",    ,
-                    "O", "O",    ,
-                       ,    ,    ];
+                      "O", "O",    ,
+                         ,    ,    ];
       expect(cpuPlayer.findBestMoves("X")).toEqual([2]);
       expect(cpuPlayer.findBestMoves("O")).toEqual([5]);
     });
@@ -60,10 +60,11 @@ describe("AIPlayer", function() {
 
       it("Case 4", function() {
         game().board = ["O", "X", "O",
-                         , "X",    ,
-                      "X", "O", "O"];
+                           , "X",    ,
+                        "X", "O", "O"];
         expect(cpuPlayer.findBestMoves("X")).toEqual([5]);
       })
+
     })
   })
 });
