@@ -27,6 +27,13 @@ describe("AIPlayer", function() {
       expect(cpuPlayer.findBestMoves("X")).toEqual([2]);
     });
 
+    it("should block the other player's lanes even if it'll lose anyways", function() {
+      game().board = ["O", "O",    ,
+                         ,    ,    ,
+                         ,    ,    ];
+      expect(cpuPlayer.findBestMoves("X")).toEqual([2]);
+    });
+
     it("should prioritize completing its own lane over blocking the enemy", function() {
       game().board = ["X", "X",    ,
                       "O", "O",    ,

@@ -75,37 +75,40 @@ function AIPlayer() {
   var memo = {}
 
   var status = {
-    WIN: 1,
+    WIN: 10,
     TIE: 0,
-    LOSE:-1
+    LOSE:-10
   }
 
-  function checkStoppingConditions(board, player) {
+  function checkStoppingConditions(board, player, depth) {
     var otherPlayer = player === "X" ? "O" : "X";
     var testGame;
 
     if(memo[[board,player]] === undefined) {
       testGame = new GameClass(board); 
 
-      if(testGame.isWinner(player) ) { memo[[board, player]] = status.WIN; }
-      else if(testGame.isWinner(otherPlayer)) { memo[[board, player]] = status.LOSE; }
-      else if(testGame.isTied()) { memo[[board, player]] = status.TIE }
+      console.log(depth);
+
+      if(testGame.isWinner(player) )          { memo[[board, player]] = status.WIN - depth; }
+      else if(testGame.isWinner(otherPlayer)) { memo[[board, player]] = status.LOSE + depth; }
+      else if(testGame.isTied())              { memo[[board, player]] = status.TIE; }
     }
   }
 
-  function predictOutcome(board, player) {
+  function predictOutcome(board, player, depth) {
+    depth = depth || 0;
     var boxIndex, newBoard, outcome;
     var worstPossibleOutcome = status.WIN;
     var otherPlayer = player === "X" ? "O" : "X";
 
-    checkStoppingConditions(board, player);
+    checkStoppingConditions(board, player, depth);
     if(memo[[board, player]] !== undefined) { return memo[[board, player]]; }
 
     for(boxIndex = 0; boxIndex < 9; boxIndex++) {
       if(board[boxIndex] === undefined) {
         newBoard = cloneBoard(board);
         newBoard[boxIndex] = otherPlayer;
-        outcome = -1 * predictOutcome(newBoard, otherPlayer);
+        outcome = -1 * predictOutcome(newBoard, otherPlayer, depth + 1);
 
         if(outcome < worstPossibleOutcome) {worstPossibleOutcome = outcome;}
       };
