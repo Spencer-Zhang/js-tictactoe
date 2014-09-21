@@ -50,18 +50,17 @@ function AIPlayer() {
   }
 
   function winnable(player) {
-    for(laneIndex = 0; laneIndex < 8; laneIndex++) {
-      lane = LANES[laneIndex];
-      count = game().countPieces(lane);
+    for(laneIndex in LANES) {
+      count = game().countPiecesInLane(laneIndex);
       if(count[player] === 2 && count.O+count.X === 2) { return true; }
     }
     return false;
   }
 
   function getWinningMove(player) {
-    for(laneIndex = 0; laneIndex < 8; laneIndex++) {
+    for(laneIndex in LANES) {
       lane = LANES[laneIndex];
-      count = game().countPieces(lane);
+      count = game().countPiecesInLane(laneIndex);
       if(count[player] === 2 && count.O+count.X === 2) {
         for(boxIndex in lane) {
           box = lane[boxIndex];

@@ -29,11 +29,11 @@ describe("Game", function() {
     })
 
     it("should return the correct number of Os and Xs in a lane", function() {
-      count = game().countPiecesInLane(0)
+      count = game().countPiecesInLane("TOP_ROW")
       expect(count.O).toEqual(2);
       expect(count.X).toEqual(1);
 
-      count = game().countPiecesInLane(1)
+      count = game().countPiecesInLane("MIDDLE_ROW")
       expect(count.O).toEqual(1);
       expect(count.X).toEqual(1);
     })

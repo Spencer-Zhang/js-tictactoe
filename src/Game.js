@@ -1,13 +1,13 @@
-var LANES = [
-  [0,1,2],
-  [3,4,5],
-  [6,7,8],
-  [0,3,6],
-  [1,4,7],
-  [2,5,8],
-  [0,4,8],
-  [2,4,6]
-];
+var LANES = {
+  TOP_ROW: [0,1,2],
+  MIDDLE_ROW: [3,4,5],
+  BOTTOM_ROW: [6,7,8],
+  LEFT_COLUMN: [0,3,6],
+  MIDDLE_COLUMN: [1,4,7],
+  RIGHT_COLUMN: [2,5,8],
+  DOWNWARDS_DIAGONAL: [0,4,8],
+  UPWARDS_DIAGONAL: [2,4,6]
+};
 
 
 
@@ -80,7 +80,7 @@ function GameClass(board) {
   this.winnerExists = function() {
     var laneIndex, count;
 
-    for(laneIndex=0; laneIndex<8; laneIndex++) {
+    for(laneIndex in LANES) {
       count = this.countPiecesInLane(laneIndex);
       
       if(count.O === 3 || count.X === 3) {
@@ -93,7 +93,7 @@ function GameClass(board) {
   this.getWinnerData = function() {
     var laneIndex, count;
 
-    for(laneIndex=0; laneIndex<8; laneIndex++) {
+    for(laneIndex in LANES) {
       count = this.countPiecesInLane(laneIndex);
       
       if(count.O === 3 || count.X === 3) {
