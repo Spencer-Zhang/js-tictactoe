@@ -33,13 +33,20 @@ function GameClass(board) {
   this.board = board || Array(9);
   this.currentPlayer = "O";
 
-  this.countPieces = function(lane) {
+  this.countPiecesOnBoard = function() {
+    return this.countPieces([0,1,2,3,4,5,6,7,8])
+  }
+
+  this.countPiecesInLane = function(index) {
+    return this.countPieces(LANES[index])
+  }
+
+  this.countPieces = function(boxes) {
     var boxIndex, box;
     var count = { O: 0, X: 0 };
-    lane = lane || [0,1,2,3,4,5,6,7,8];
 
-    for(boxIndex in lane) {
-      box = lane[boxIndex];
+    for(boxIndex in boxes) {
+      box = boxes[boxIndex];
       if(this.board[box] == "O") { count.O += 1; }
       if(this.board[box] == "X") { count.X += 1; }
     }
@@ -66,16 +73,15 @@ function GameClass(board) {
   }
 
   this.isTied = function() {
-    var count = this.countPieces();
+    var count = this.countPiecesOnBoard();
     return(!this.winnerExists() && count.O + count.X === 9);
   }
 
   this.winnerExists = function() {
-    var laneIndex, lane, count;
+    var laneIndex, count;
 
     for(laneIndex=0; laneIndex<8; laneIndex++) {
-      lane = LANES[laneIndex];
-      count = this.countPieces(lane);
+      count = this.countPiecesInLane(laneIndex);
       
       if(count.O === 3 || count.X === 3) {
         return true;
@@ -85,15 +91,14 @@ function GameClass(board) {
   }
 
   this.getWinnerData = function() {
-    var laneIndex, lane, count;
+    var laneIndex, count;
 
     for(laneIndex=0; laneIndex<8; laneIndex++) {
-      lane = LANES[laneIndex];
-      count = this.countPieces(lane);
+      count = this.countPiecesInLane(laneIndex);
       
       if(count.O === 3 || count.X === 3) {
-        if(count.O === 3) { return {player:"O", lane:laneIndex}; }
-        if(count.X === 3) { return {player:"X", lane:laneIndex}; }
+        if(count.O === 3) { return {player:"O", lane:LANES[laneIndex]}; }
+        if(count.X === 3) { return {player:"X", lane:LANES[laneIndex]}; }
       }
     }
   }

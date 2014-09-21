@@ -19,7 +19,7 @@ describe("Game", function() {
 
   
 
-  describe("#countPieces", function() {
+  describe("#countPiecesInLane", function() {
     beforeEach(function() {
       game().board[0] = "O";
       game().board[1] = "X";
@@ -29,21 +29,32 @@ describe("Game", function() {
     })
 
     it("should return the correct number of Os and Xs in a lane", function() {
-      count = game().countPieces([0,1,2])
+      count = game().countPiecesInLane(0)
       expect(count.O).toEqual(2);
       expect(count.X).toEqual(1);
 
-      count = game().countPieces([3,4,5])
+      count = game().countPiecesInLane(1)
       expect(count.O).toEqual(1);
       expect(count.X).toEqual(1);
     })
+  });
 
-    it("should return the total number of Os and Xs if no parameter is given", function() {
-      count = game().countPieces()
+
+  describe("#countPiecesOnBoard", function() {
+    beforeEach(function() {
+      game().board[0] = "O";
+      game().board[1] = "X";
+      game().board[2] = "O";
+      game().board[3] = "X";
+      game().board[4] = "O";
+    })
+
+    it("should return the total number of Os and Xs on the board", function() {
+      count = game().countPiecesOnBoard()
       expect(count.O).toEqual(3);
       expect(count.X).toEqual(2);
     })
-  })
+  });
 
   
 
@@ -92,7 +103,7 @@ describe("Game", function() {
       game().board[2] = "X";
       winner = game().getWinnerData();
       expect(winner.player).toEqual("X");
-      expect(winner.lane).toEqual(0);
+      expect(winner.lane).toEqual([0, 1, 2]);
     });
 
     it("returns undefined if there is no winner", function() {

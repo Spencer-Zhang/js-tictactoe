@@ -37,8 +37,8 @@ function Display() {
   function showStatus() {
     if(game().winnerExists()) {
       winner = game().getWinnerData();
-      for(boxIndex in LANES[winner.lane]) {
-        $('#b' + LANES[winner.lane][boxIndex]).css('background-color', 'red');
+      for(boxIndex in winner.lane) {
+        $('#b' + winner.lane[boxIndex]).css('background-color', 'red');
       }
       showMessage("Player " + winner.player + " wins!");
     }
