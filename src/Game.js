@@ -15,14 +15,14 @@ var Game = function() {
   // Singleton
   var instance;
 
-  function init() {
-    instance = new GameClass();
-  }
-
   return {
     getInstance: function() {
-      if(!instance) { init(); }
+      if(!instance) { this.reset(); }
       return instance;
+    },
+
+    reset: function() {
+      instance = new GameClass();
     }
   };
 }();
@@ -32,11 +32,6 @@ var Game = function() {
 function GameClass(board) {
   this.board = board || Array(9);
   this.currentPlayer = "O";
-
-  this.reset = function() {
-    this.board = Array(9);
-    this.currentPlayer = "O";
-  }
 
   this.countPieces = function(lane) {
     var boxIndex, box;

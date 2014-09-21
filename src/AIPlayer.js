@@ -1,7 +1,7 @@
 function AIPlayer() {
   this.takeTurn = function(player) {
     var move = pickRandom(this.findBestMoves(player));
-    game.playMove(move, player);
+    game().playMove(move, player);
   }
 
   this.findBestMoves = function(player) {
@@ -12,8 +12,8 @@ function AIPlayer() {
     if(winnable(player)) { return([getWinningMove(player)]); }
 
     for(boxIndex = 0; boxIndex < 9; boxIndex++) {
-      if(game.board[boxIndex] === undefined) {
-        board = cloneBoard(game.board);
+      if(game().board[boxIndex] === undefined) {
+        board = cloneBoard(game().board);
         board[boxIndex] = player;
 
         if(predictOutcome(board, player) > bestOutcome) {
@@ -34,7 +34,7 @@ function AIPlayer() {
 
   // Private
 
-  var game = Game.getInstance();
+  var game = Game.getInstance;
 
   function cloneBoard(board) {
     var newBoard = Array(9)
@@ -52,7 +52,7 @@ function AIPlayer() {
   function winnable(player) {
     for(laneIndex = 0; laneIndex < 8; laneIndex++) {
       lane = LANES[laneIndex];
-      count = game.countPieces(lane);
+      count = game().countPieces(lane);
       if(count[player] === 2 && count.O+count.X === 2) { return true; }
     }
     return false;
@@ -61,11 +61,11 @@ function AIPlayer() {
   function getWinningMove(player) {
     for(laneIndex = 0; laneIndex < 8; laneIndex++) {
       lane = LANES[laneIndex];
-      count = game.countPieces(lane);
+      count = game().countPieces(lane);
       if(count[player] === 2 && count.O+count.X === 2) {
         for(boxIndex in lane) {
           box = lane[boxIndex];
-          if(game.board[box] === undefined) { return box }
+          if(game().board[box] === undefined) { return box }
         }
       }
     }

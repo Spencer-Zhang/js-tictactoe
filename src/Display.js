@@ -11,7 +11,7 @@ function Display() {
 
   // Private
 
-  var game = Game.getInstance();
+  var game = Game.getInstance;
 
   function showMessage(message) {
     $('.message').text(message);
@@ -28,21 +28,21 @@ function Display() {
   function drawPieces() {
     var i;
     for(i=0; i<9; i++){
-      if(game.board[i] !== undefined) {
-        $("#b" + i).text(game.board[i]);
+      if(game().board[i] !== undefined) {
+        $("#b" + i).text(game().board[i]);
       }
     }
   };
 
   function showStatus() {
-    if(game.winnerExists()) {
-      winner = game.getWinnerData();
+    if(game().winnerExists()) {
+      winner = game().getWinnerData();
       for(boxIndex in LANES[winner.lane]) {
         $('#b' + LANES[winner.lane][boxIndex]).css('background-color', 'red');
       }
       showMessage("Player " + winner.player + " wins!");
     }
-    else if(game.isTied()) {
+    else if(game().isTied()) {
       showMessage("Cat's game");
     }
     else {
