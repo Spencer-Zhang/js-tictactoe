@@ -75,7 +75,7 @@ describe("Game", function() {
       expect(game.winnerExists()).toEqual(false);;
     })
 
-    it("return the winning player and lane if a row is filled", function() {
+    it("return true if a row is filled", function() {
       game.board[0] = "X";
       game.board[1] = "X";
       game.board[2] = "X";
