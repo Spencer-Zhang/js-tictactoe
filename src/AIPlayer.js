@@ -5,18 +5,10 @@ function AIPlayer() {
   }
 
   this.findBestMoves = function(player) {
-    var boxIndex, board, bestOutcome;
+    var outcomes = [], bestOutcome;
     var bestMoves = [];
-    var outcomes = [];
 
-    for(boxIndex = 0; boxIndex < 9; boxIndex++) {
-      if(game().board[boxIndex] === undefined) {
-        board = cloneBoard(game().board);
-        board[boxIndex] = player;
-        outcomes[boxIndex] = predictOutcome(board, player);
-      }
-    }
-
+    outcomes = getOutcomesOfMoves(game().board, player, 0);
     bestOutcome = maximum(outcomes);
 
     for(i in outcomes) {
@@ -54,15 +46,6 @@ function AIPlayer() {
     return max;
   }
 
-  function minimum(array) {
-    var min;
-    for(i in array) {
-      if(min == undefined) { min = array[i]; }
-      if(array[i] < min) { min = array[i]; }
-    }
-    return min;
-  }
-
 
 
   var memo = {}
@@ -88,24 +71,32 @@ function AIPlayer() {
 
   function predictOutcome(board, player, depth) {
     depth = depth || 0;
-    var boxIndex, newBoard, worstOutcome;
-    var outcomes = [];
+    var worstOutcome;
+    var outcomes;
     var otherPlayer = player === "X" ? "O" : "X";
 
     checkStoppingConditions(board, player, depth);
     if(memo[[board, player]] !== undefined) { return memo[[board, player]]; }
 
-    for(boxIndex = 0; boxIndex < 9; boxIndex++) {
-      if(board[boxIndex] === undefined) {
-        newBoard = cloneBoard(board);
-        newBoard[boxIndex] = otherPlayer;
-        outcomes[boxIndex] = -1 * predictOutcome(newBoard, otherPlayer, depth + 1);
-      };
-    }
+    outcomes = getOutcomesOfMoves(board, otherPlayer, depth);
 
-    worstOutcome = minimum(outcomes);
+    worstOutcome = -1 * maximum(outcomes);
 
     memo[[board, player]] = worstOutcome;
     return worstOutcome;
+  }
+
+  function getOutcomesOfMoves(board, player, depth) {
+    var outcomes = [];
+    var newBoard, boxIndex;
+
+    for(boxIndex = 0; boxIndex < 9; boxIndex++) {
+      if(board[boxIndex] === undefined) {
+        newBoard = cloneBoard(board);
+        newBoard[boxIndex] = player;
+        outcomes[boxIndex] = predictOutcome(newBoard, player, depth + 1);
+      };
+    }
+    return outcomes;
   }
 }
