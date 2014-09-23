@@ -5,10 +5,10 @@ function AIPlayer() {
   }
 
   this.findBestMoves = function(player) {
-    var outcomes = [], bestOutcome;
+    var outcomes, bestOutcome, i;
     var bestMoves = [];
 
-    outcomes = getOutcomesOfMoves(game().board, player, 0);
+    outcomes = testPossibleMoves(game().board, player);
     bestOutcome = maximum(outcomes);
 
     for(i in outcomes) {
@@ -25,7 +25,8 @@ function AIPlayer() {
   var game = Game.getInstance;
 
   function cloneBoard(board) {
-    var newBoard = Array(9)
+    var i;
+    var newBoard = Array(9);
     for(i = 0; i < 9; i++) {
       newBoard[i] = board[i];
     }
@@ -38,7 +39,7 @@ function AIPlayer() {
   }
 
   function maximum(array) {
-    var max;
+    var max, i;
     for(i in array) {
       if(max == undefined) { max = array[i]; }
       if(array[i] > max) { max = array[i]; }
@@ -70,7 +71,6 @@ function AIPlayer() {
   }
 
   function predictOutcome(board, player, depth) {
-    depth = depth || 0;
     var worstOutcome;
     var outcomes;
     var otherPlayer = player === "X" ? "O" : "X";
@@ -78,17 +78,18 @@ function AIPlayer() {
     checkStoppingConditions(board, player, depth);
     if(memo[[board, player]] !== undefined) { return memo[[board, player]]; }
 
-    outcomes = getOutcomesOfMoves(board, otherPlayer, depth);
-
+    outcomes = testPossibleMoves(board, otherPlayer, depth);
     worstOutcome = -1 * maximum(outcomes);
 
     memo[[board, player]] = worstOutcome;
     return worstOutcome;
   }
 
-  function getOutcomesOfMoves(board, player, depth) {
+  function testPossibleMoves(board, player, depth) {
     var outcomes = [];
     var newBoard, boxIndex;
+
+    depth = depth || 0;
 
     for(boxIndex = 0; boxIndex < 9; boxIndex++) {
       if(board[boxIndex] === undefined) {
