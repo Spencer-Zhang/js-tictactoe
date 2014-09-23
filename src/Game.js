@@ -34,11 +34,11 @@ function GameClass(board) {
   this.currentPlayer = "O";
 
   this.countPiecesOnBoard = function() {
-    return this.countPieces([0,1,2,3,4,5,6,7,8])
+    return this.countPieces([0,1,2,3,4,5,6,7,8]);
   }
 
   this.countPiecesInLane = function(index) {
-    return this.countPieces(LANES[index])
+    return this.countPieces(LANES[index]);
   }
 
   this.countPieces = function(boxes) {

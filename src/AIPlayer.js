@@ -5,24 +5,22 @@ function AIPlayer() {
   }
 
   this.findBestMoves = function(player) {
-    var boxIndex, board;
-    var bestOutcome = status.LOSE;
+    var boxIndex, board, bestOutcome;
     var bestMoves = [];
+    var outcomes = [];
 
     for(boxIndex = 0; boxIndex < 9; boxIndex++) {
       if(game().board[boxIndex] === undefined) {
         board = cloneBoard(game().board);
         board[boxIndex] = player;
-
-        if(predictOutcome(board, player) > bestOutcome) {
-          bestMoves = [];
-          bestOutcome = predictOutcome(board, player);
-        };
-
-        if(predictOutcome(board, player) === bestOutcome) {
-          bestMoves.push(boxIndex);
-        }
+        outcomes[boxIndex] = predictOutcome(board, player);
       }
+    }
+
+    bestOutcome = maximum(outcomes);
+
+    for(i in outcomes) {
+      if(outcomes[i] == bestOutcome) { bestMoves.push(parseInt(i)); }
     }
 
     return bestMoves;
@@ -45,6 +43,24 @@ function AIPlayer() {
   function pickRandom(array) {
     var randomIndex = Math.floor(Math.random() * array.length)
     return array[randomIndex]
+  }
+
+  function maximum(array) {
+    var max;
+    for(i in array) {
+      if(max == undefined) { max = array[i]; }
+      if(array[i] > max) { max = array[i]; }
+    }
+    return max;
+  }
+
+  function minimum(array) {
+    var min;
+    for(i in array) {
+      if(min == undefined) { min = array[i]; }
+      if(array[i] < min) { min = array[i]; }
+    }
+    return min;
   }
 
 
