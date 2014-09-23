@@ -1,7 +1,6 @@
 function AIPlayer() {
   this.takeTurn = function(player) {
     var move = pickRandom(this.findBestMoves(player));
-    memo = {};
     game().playMove(move, player);
   }
 
@@ -57,12 +56,14 @@ function AIPlayer() {
     LOSE:-10
   }
 
-  function checkStoppingConditions(board, player, depth) {
+  function checkStoppingConditions(board, player) {
     var otherPlayer = (player === "X" ? "O" : "X");
-    var testGame;
+    var testGame, count, depth;
 
     if(memo[[board,player]] === undefined) {
       testGame = new GameClass(board); 
+      count = testGame.countPiecesOnBoard();
+      depth = count.O + count.X;
 
       if(testGame.isWinner(player) )          { memo[[board, player]] = status.WIN - depth; }
       else if(testGame.isWinner(otherPlayer)) { memo[[board, player]] = status.LOSE + depth; }
@@ -70,31 +71,29 @@ function AIPlayer() {
     }
   }
 
-  function predictOutcome(board, player, depth) {
+  function predictOutcome(board, player) {
     var worstOutcome, outcomes;
     var otherPlayer = player === "X" ? "O" : "X";
 
-    checkStoppingConditions(board, player, depth);
+    checkStoppingConditions(board, player);
     if(memo[[board, player]] !== undefined) { return memo[[board, player]]; }
 
-    outcomes = testPossibleMoves(board, otherPlayer, depth);
+    outcomes = testPossibleMoves(board, otherPlayer);
     worstOutcome = -1 * maximum(outcomes);
 
     memo[[board, player]] = worstOutcome;
     return worstOutcome;
   }
 
-  function testPossibleMoves(board, player, depth) {
+  function testPossibleMoves(board, player) {
     var outcomes = [];
     var newBoard, boxIndex;
-
-    if(depth === undefined) { depth = -1; }
 
     for(boxIndex = 0; boxIndex < 9; boxIndex++) {
       if(board[boxIndex] === undefined) {
         newBoard = cloneBoard(board);
         newBoard[boxIndex] = player;
-        outcomes[boxIndex] = predictOutcome(newBoard, player, depth + 1);
+        outcomes[boxIndex] = predictOutcome(newBoard, player);
       };
     }
     return outcomes;
