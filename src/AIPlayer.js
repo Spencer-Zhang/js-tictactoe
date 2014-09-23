@@ -58,15 +58,15 @@ function AIPlayer() {
 
   function checkStoppingConditions(board, player) {
     var otherPlayer = (player === "X" ? "O" : "X");
-    var testGame, count, depth;
+    var testGame, count, turn;
 
     if(memo[[board,player]] === undefined) {
       testGame = new GameClass(board); 
       count = testGame.countPiecesOnBoard();
-      depth = count.O + count.X;
+      turn = count.O + count.X;
 
-      if(testGame.isWinner(player) )          { memo[[board, player]] = status.WIN - depth; }
-      else if(testGame.isWinner(otherPlayer)) { memo[[board, player]] = status.LOSE + depth; }
+      if(testGame.isWinner(player) )          { memo[[board, player]] = status.WIN - turn; }
+      else if(testGame.isWinner(otherPlayer)) { memo[[board, player]] = status.LOSE + turn; }
       else if(testGame.isTied())              { memo[[board, player]] = status.TIE; }
     }
   }
