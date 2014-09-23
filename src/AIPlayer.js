@@ -1,6 +1,7 @@
 function AIPlayer() {
   this.takeTurn = function(player) {
     var move = pickRandom(this.findBestMoves(player));
+    memo = {};
     game().playMove(move, player);
   }
 
@@ -41,8 +42,7 @@ function AIPlayer() {
   function maximum(array) {
     var max, i;
     for(i in array) {
-      if(max == undefined) { max = array[i]; }
-      if(array[i] > max) { max = array[i]; }
+      if(max == undefined || array[i] > max) { max = array[i]; }
     }
     return max;
   }
@@ -58,7 +58,7 @@ function AIPlayer() {
   }
 
   function checkStoppingConditions(board, player, depth) {
-    var otherPlayer = player === "X" ? "O" : "X";
+    var otherPlayer = (player === "X" ? "O" : "X");
     var testGame;
 
     if(memo[[board,player]] === undefined) {
@@ -71,8 +71,7 @@ function AIPlayer() {
   }
 
   function predictOutcome(board, player, depth) {
-    var worstOutcome;
-    var outcomes;
+    var worstOutcome, outcomes;
     var otherPlayer = player === "X" ? "O" : "X";
 
     checkStoppingConditions(board, player, depth);
@@ -89,7 +88,7 @@ function AIPlayer() {
     var outcomes = [];
     var newBoard, boxIndex;
 
-    depth = depth || 0;
+    if(depth === undefined) { depth = -1; }
 
     for(boxIndex = 0; boxIndex < 9; boxIndex++) {
       if(board[boxIndex] === undefined) {
