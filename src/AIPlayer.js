@@ -88,8 +88,8 @@ function AIPlayer() {
 
   function predictOutcome(board, player, depth) {
     depth = depth || 0;
-    var boxIndex, newBoard, outcome;
-    var worstPossibleOutcome = status.WIN;
+    var boxIndex, newBoard, worstOutcome;
+    var outcomes = [];
     var otherPlayer = player === "X" ? "O" : "X";
 
     checkStoppingConditions(board, player, depth);
@@ -99,13 +99,13 @@ function AIPlayer() {
       if(board[boxIndex] === undefined) {
         newBoard = cloneBoard(board);
         newBoard[boxIndex] = otherPlayer;
-        outcome = -1 * predictOutcome(newBoard, otherPlayer, depth + 1);
-
-        if(outcome < worstPossibleOutcome) {worstPossibleOutcome = outcome;}
+        outcomes[boxIndex] = -1 * predictOutcome(newBoard, otherPlayer, depth + 1);
       };
     }
 
-    memo[[board, player]] = worstPossibleOutcome;
-    return worstPossibleOutcome;
+    worstOutcome = minimum(outcomes);
+
+    memo[[board, player]] = worstOutcome;
+    return worstOutcome;
   }
 }
