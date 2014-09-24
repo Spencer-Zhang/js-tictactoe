@@ -8,11 +8,11 @@ function AIPlayer() {
     var outcomes, bestOutcome, i;
     var bestMoves = [];
 
-    outcomes = testPossibleMoves(game().board, player);
+    outcomes = getOutcomesOfPossibleMoves(game().board, player);
     bestOutcome = maximum(outcomes);
 
-    for(i in outcomes) {
-      if(outcomes[i] == bestOutcome) { bestMoves.push(parseInt(i)); }
+    for(boxIndex in outcomes) {
+      if(outcomes[boxIndex] === bestOutcome) { bestMoves.push(parseInt(boxIndex)); }
     }
 
     return bestMoves;
@@ -78,14 +78,14 @@ function AIPlayer() {
     checkStoppingConditions(board, player);
     if(memo[[board, player]] !== undefined) { return memo[[board, player]]; }
 
-    outcomes = testPossibleMoves(board, otherPlayer);
+    outcomes = getOutcomesOfPossibleMoves(board, otherPlayer);
     worstOutcome = -1 * maximum(outcomes);
 
     memo[[board, player]] = worstOutcome;
     return worstOutcome;
   }
 
-  function testPossibleMoves(board, player) {
+  function getOutcomesOfPossibleMoves(board, player) {
     var outcomes = [];
     var newBoard, boxIndex;
 
